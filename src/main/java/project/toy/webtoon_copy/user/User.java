@@ -1,15 +1,14 @@
-package project.toy.webtoon_copy.customer;
+package project.toy.webtoon_copy.user;
 
 import com.sun.istack.NotNull;
-import project.toy.webtoon_copy.comments.Comment;
-import project.toy.webtoon_copy.cookie.Cookie;
-import project.toy.webtoon_copy.likewebtoon.LikeWebtoon;
+import lombok.Data;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity(name = "Users")
-public class Customer {
+@Data
+public class User {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long userSeq;
