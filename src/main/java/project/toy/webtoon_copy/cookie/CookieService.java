@@ -1,2 +1,4 @@
-package project.toy.webtoon_copy.cookie;public interface CookieService {
+package project.toy.webtoon_copy.cookie;
+
+public interface CookieService {
 }
