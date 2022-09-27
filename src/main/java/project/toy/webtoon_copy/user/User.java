@@ -1,13 +1,20 @@
 package project.toy.webtoon_copy.user;
 
 import com.sun.istack.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.Generated;
+import org.hibernate.annotations.GenerationTime;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity(name = "Users")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,14 +26,8 @@ public class User {
     @NotNull
     String userName;
     @NotNull
-    Integer phoneNum;
+    String phoneNum;
     @NotNull
     LocalDateTime createDt;
     LocalDateTime modifyDt;
-
-    // 얘네가 엔티티엔 필요없지 않나? 각 값의 PK값만 있으면 되는거 아닌가?
-//    Cookie cookie;
-//    Comment myComments;
-//    LikeWebtoon myWebtoon;
-
 }

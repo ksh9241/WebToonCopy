@@ -7,6 +7,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import project.toy.webtoon_copy.cookie.Cookie;
+import project.toy.webtoon_copy.cookie.CookieDto;
+import project.toy.webtoon_copy.cookie.CookieRepository;
 
 import java.util.ArrayList;
 
@@ -18,6 +21,12 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    CookieRepository cookieRepository;
+
+    @Autowired
+    ModelMapper mapper;
 
     @Override
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
@@ -33,13 +42,27 @@ public class UserServiceImpl implements UserService {
             throw new UsernameNotFoundException("필수값 없음");
         }
 
-        ModelMapper mapper = new ModelMapper();
-//        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        // 유저 회원가입
         User user = mapper.map(userDto, User.class);
         user.setUserPwd(bCryptPasswordEncoder.encode(userDto.getUserPwd()));
         userRepository.save(user);
         UserDto resUserDto = mapper.map(user, UserDto.class);
+
+        // 유저 별 쿠키 오브젝트 생성
+        CookieDto cookieDto = createCookie(resUserDto.getUserSeq());
+        resUserDto.setCookie(cookieDto);
+
         return resUserDto;
+    }
+
+    private CookieDto createCookie(Long userSeq) {
+        CookieDto cookieDto = new CookieDto();
+        cookieDto.setUserSeq(userSeq);
+        Cookie cookie = mapper.map(cookieDto, Cookie.class);
+        cookieRepository.save(cookie);
+
+        CookieDto resCookieDto = mapper.map(cookie, CookieDto.class);
+        return resCookieDto;
     }
 
 }

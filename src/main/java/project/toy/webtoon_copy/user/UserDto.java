@@ -4,6 +4,7 @@ import com.sun.istack.NotNull;
 import lombok.Data;
 import project.toy.webtoon_copy.comments.Comment;
 import project.toy.webtoon_copy.cookie.Cookie;
+import project.toy.webtoon_copy.cookie.CookieDto;
 import project.toy.webtoon_copy.likewebtoon.LikeWebtoon;
 import project.toy.webtoon_copy.util.CheckUtils;
 
@@ -17,10 +18,10 @@ public class UserDto {
     private String userId;
     private String userPwd;
     private String userName;
-    private Integer phoneNum;
-    private LocalDateTime createDt;
+    private String phoneNum;
+    private LocalDateTime createDt = LocalDateTime.now();
     private LocalDateTime modifyDt;
-    private Cookie cookie;
+    private CookieDto cookie;
     private List<Comment> myComments;
     private List<LikeWebtoon> myWebtoon;
 
