@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Generated;
 import org.hibernate.annotations.GenerationTime;
+import project.toy.webtoon_copy.util.Role;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -27,6 +28,8 @@ public class User {
     String userName;
     @NotNull
     String phoneNum;
+    @NotNull @Enumerated(EnumType.STRING)
+    Role role;
     @NotNull
     LocalDateTime createDt;
     LocalDateTime modifyDt;

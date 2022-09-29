@@ -7,6 +7,7 @@ import project.toy.webtoon_copy.cookie.Cookie;
 import project.toy.webtoon_copy.cookie.CookieDto;
 import project.toy.webtoon_copy.likewebtoon.LikeWebtoon;
 import project.toy.webtoon_copy.util.CheckUtils;
+import project.toy.webtoon_copy.util.Role;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,6 +20,7 @@ public class UserDto {
     private String userPwd;
     private String userName;
     private String phoneNum;
+    private Role role;
     private LocalDateTime createDt = LocalDateTime.now();
     private LocalDateTime modifyDt;
     private CookieDto cookie;

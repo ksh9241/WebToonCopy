@@ -3,6 +3,7 @@ package project.toy.webtoon_copy.user;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import project.toy.webtoon_copy.cookie.Cookie;
 import project.toy.webtoon_copy.cookie.CookieDto;
 import project.toy.webtoon_copy.cookie.CookieRepository;
+import project.toy.webtoon_copy.cookie.CookieService;
 
 import java.util.ArrayList;
 
@@ -23,7 +25,7 @@ public class UserServiceImpl implements UserService {
     UserRepository userRepository;
 
     @Autowired
-    CookieRepository cookieRepository;
+    CookieService cookieService;
 
     @Autowired
     ModelMapper mapper;
@@ -34,7 +36,8 @@ public class UserServiceImpl implements UserService {
         if (userEntity == null) {
             throw new UsernameNotFoundException(userId + ": not found");
         }
-        return new org.springframework.security.core.userdetails.User(userEntity.getUserId(), userEntity.getUserPwd(), new ArrayList<>());
+        return new org.springframework.security.core.userdetails.User
+                (userEntity.getUserId(), userEntity.getUserPwd(), AuthorityUtils.createAuthorityList(userEntity.getRole().value()));
     }
 
     public UserDto createUser(UserDto userDto) {
@@ -49,20 +52,9 @@ public class UserServiceImpl implements UserService {
         UserDto resUserDto = mapper.map(user, UserDto.class);
 
         // 유저 별 쿠키 오브젝트 생성
-        CookieDto cookieDto = createCookie(resUserDto.getUserSeq());
+        CookieDto cookieDto = cookieService.createCookie(resUserDto.getUserSeq());
         resUserDto.setCookie(cookieDto);
 
         return resUserDto;
     }
-
-    private CookieDto createCookie(Long userSeq) {
-        CookieDto cookieDto = new CookieDto();
-        cookieDto.setUserSeq(userSeq);
-        Cookie cookie = mapper.map(cookieDto, Cookie.class);
-        cookieRepository.save(cookie);
-
-        CookieDto resCookieDto = mapper.map(cookie, CookieDto.class);
-        return resCookieDto;
-    }
-
 }
