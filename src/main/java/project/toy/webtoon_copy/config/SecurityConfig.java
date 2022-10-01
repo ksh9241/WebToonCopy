@@ -20,7 +20,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/swagger-ui.*", "/resources/**").permitAll()
+                .antMatchers("/swagger-ui.html", "/resources/**").permitAll()
 //                .antMatchers("/").hasAuthority("ROLE_ADMIN")
 //                .antMatchers("/cookie/**").hasRole("ADMIN") // hasRole() == "ROLE_" 가 접두어로 붙기 때문에 빼고 작성한다.
                 .antMatchers("/cookie/**").access("hasRole('USER') or hasRole('ADMIN')") // hasRole() == "ROLE_" 가 접두어로 붙기 때문에 빼고 작성한다.

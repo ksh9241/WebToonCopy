@@ -20,9 +20,5 @@ public class UserController {
         map.put("user", resUserDto);
         return map;
     }
-
-    @GetMapping("/")
-    public String authorizationTestUrl() {
-        return "hello world";
-    }
+    
 }
