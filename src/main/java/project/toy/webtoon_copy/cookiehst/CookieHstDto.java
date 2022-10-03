@@ -16,6 +16,10 @@ public class CookieHstDto {
     Long cookieHstSeq;
     Long cookieSeq;
     PaymentCode paymentSttusCd;
+    Integer amount;
+    Integer quantity;
     LocalDateTime createDt = LocalDateTime.now();
     LocalDateTime modifyDt;
+    LocalDateTime efctStDt = LocalDateTime.now();
+    LocalDateTime efctFnsDt = LocalDateTime.of(9999, 12, 31, 23, 59, 59);
 }

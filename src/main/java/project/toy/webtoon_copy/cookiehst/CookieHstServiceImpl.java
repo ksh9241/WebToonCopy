@@ -3,6 +3,7 @@ package project.toy.webtoon_copy.cookiehst;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import project.toy.webtoon_copy.user.User;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ public class CookieHstServiceImpl implements CookieHstService{
     CookieHstRepository cookieHstRepository;
 
     @Autowired
-    ModelMapper modelMapper;
+    ModelMapper mapper;
 
     @Override
     public List<CookieHstDto> findAllbyCookieSeq(Long cookieSeq) {
@@ -21,9 +22,11 @@ public class CookieHstServiceImpl implements CookieHstService{
 
     @Override
     public CookieHstDto createCookieHst(CookieHstDto cookieHstDto) {
-        CookieHst cookieHst = modelMapper.map(cookieHstDto, CookieHst.class);
+        System.out.println("dto === " + cookieHstDto);
+        CookieHst cookieHst = mapper.map(cookieHstDto, CookieHst.class);
+        System.out.println("entity == " + cookieHst);
         cookieHstRepository.save(cookieHst);
-        CookieHstDto resultDto = modelMapper.map(cookieHst, CookieHstDto.class);
+        CookieHstDto resultDto = mapper.map(cookieHst, CookieHstDto.class);
 
         return resultDto;
     }
