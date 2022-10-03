@@ -1,5 +1,6 @@
 package project.toy.webtoon_copy.kakaopay;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -9,6 +10,10 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
+import project.toy.webtoon_copy.cookiehst.CookieHstDto;
+import project.toy.webtoon_copy.cookiehst.CookieHstService;
+import project.toy.webtoon_copy.cookiehst.PaymentCode;
+import project.toy.webtoon_copy.util.CheckUtils;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -24,6 +29,9 @@ public class KakaoPay {
     private KakaoPayVo kakaoPayVo;
     private KakaoPayApprovalVo kakaoPayApprovalVo;
     private KakaoPayDto kakaoPayDto;
+
+    @Autowired
+    private CookieHstService cookieHstService;
 
     public String kakaoPayReady(KakaoPayDto kakaoPayDto) {
         RestTemplate restTemplate = new RestTemplate();
@@ -53,9 +61,13 @@ public class KakaoPay {
         HttpEntity<MultiValueMap<String, String>> body = new HttpEntity<>(params, headers);
 
         try {
+            /**
+             * kakaoPayVo 의 변수명을 언더바표기법으로 인스턴스를 변경없이 생성해야 한다.
+             * */
             kakaoPayVo = restTemplate
                     .postForObject(new URI(HOST + "/v1/payment/ready"), body, KakaoPayVo.class);
-            return kakaoPayVo.getRedirectPcUrl();
+
+            return kakaoPayVo.getNext_redirect_pc_url();
         } catch (RestClientException e) {
             e.printStackTrace();
         } catch (URISyntaxException e) {
@@ -80,13 +92,15 @@ public class KakaoPay {
         params.add("partner_order_id", "1001");
         params.add("partner_user_id", "gorany");
         params.add("pg_token", pg_token);
-        params.add("total_amount", "2100");
+        params.add("total_amount", kakaoPayDto.getTotalAmount());
 
         HttpEntity<MultiValueMap<String, String>> body = new HttpEntity<MultiValueMap<String, String>>(params, headers);
 
         try {
             kakaoPayApprovalVo = restTemplate.postForObject(new URI(HOST + "/v1/payment/approve"), body, KakaoPayApprovalVo.class);
-
+            if (successPayment()) {
+                createCookieHst();
+            }
             return kakaoPayApprovalVo;
 
         } catch (RestClientException e) {
@@ -96,5 +110,21 @@ public class KakaoPay {
         }
         return null;
     }
+
+    private boolean successPayment() {
+        return !CheckUtils.isEmpty(kakaoPayApprovalVo.getAid());
+    }
+
+    private void createCookieHst() {
+        CookieHstDto cookieHstDto = new CookieHstDto();
+        cookieHstDto.setCookieSeq(kakaoPayDto.getCookieSeq());
+        cookieHstDto.setPaymentSttusCd(PaymentCode.A);
+        cookieHstDto.setAmount(kakaoPayApprovalVo.getAmount().getTotal());
+        cookieHstDto.setQuantity(kakaoPayApprovalVo.getQuantity());
+
+        cookieHstService.createCookieHst(cookieHstDto);
+    }
+
+
 
 }
