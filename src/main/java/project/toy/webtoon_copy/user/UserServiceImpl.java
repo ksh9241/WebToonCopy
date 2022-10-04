@@ -1,19 +1,14 @@
 package project.toy.webtoon_copy.user;
 
 import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import project.toy.webtoon_copy.cookie.Cookie;
 import project.toy.webtoon_copy.cookie.CookieDto;
-import project.toy.webtoon_copy.cookie.CookieRepository;
 import project.toy.webtoon_copy.cookie.CookieService;
-
-import java.util.ArrayList;
 
 @Service
 public class UserServiceImpl implements UserService {

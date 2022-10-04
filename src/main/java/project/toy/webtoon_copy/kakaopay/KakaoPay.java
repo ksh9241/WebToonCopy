@@ -77,7 +77,7 @@ public class KakaoPay {
         return "/pay";
     }
 
-    public KakaoPayApprovalVo kakaoPayInfo(String pg_token) {
+    public KakaoPayDto kakaoPayInfo(String pg_token) {
         RestTemplate restTemplate = new RestTemplate();
 
         // 서버로 요청할 Header
@@ -101,7 +101,8 @@ public class KakaoPay {
             if (successPayment()) {
                 createCookieHst();
             }
-            return kakaoPayApprovalVo;
+
+            return kakaoPayDto;
 
         } catch (RestClientException e) {
             e.printStackTrace();
