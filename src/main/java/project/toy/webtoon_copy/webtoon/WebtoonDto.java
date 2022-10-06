@@ -1,29 +1,30 @@
 package project.toy.webtoon_copy.webtoon;
 
 import com.sun.istack.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.ColumnDefault;
 import project.toy.webtoon_copy.util.DayOfWeek;
 
-import javax.persistence.*;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.time.LocalDateTime;
 
-@Entity
-public class Webtoon {
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
+public class WebtoonDto {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long webtoonSeq;
-    @NotNull
     String webtoonName;
-    @NotNull
     String artist;
-    @NotNull @Enumerated(EnumType.STRING)
     DayOfWeek dayOfWeek;
-    @ColumnDefault("0")
     Integer grade;
-    @NotNull
     LocalDateTime createDt;
     LocalDateTime modifyDt;
-
     String fileName;
     String originFileName;
 }
