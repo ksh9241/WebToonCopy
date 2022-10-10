@@ -16,7 +16,7 @@ public class Comment {
     Long commentSeq;
 
     @NotNull
-    Long userSeq; // DB는 유저 시퀀스만 가지고 있는게 맞는 것 같은데
+    Long userSeq; // 1 : 1 관계 Entity로 변환하는게 나을 듯? Ui에서 보여줘야 할 정보는 유저아이디이기 때문에
     @NotNull
     Long webtoonSeq;
     @NotNull
