@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CommentDto implements RootCommentDto{
+public class CommentDto{
 
     Long commentSeq;
     Long userSeq; // 1 : 1 관계 Entity로 변환하는게 나을 듯? Ui에서 보여줘야 할 정보는 유저아이디이기 때문에
@@ -23,7 +23,6 @@ public class CommentDto implements RootCommentDto{
     LocalDateTime createDt = LocalDateTime.now();
     LocalDateTime modifyDt;
 
-    @Autowired
     public Exception checkUser() {
         if(CheckUtils.isEmpty(this.userSeq)) {
             throw new UsernameNotFoundException("유저만 댓글을 입력할 수 있습니다.");

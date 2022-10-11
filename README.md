@@ -47,3 +47,11 @@
   - Entity를 객체타입으로 받아서 연관관계를 형성하는 방법밖에 없나?
 - 댓글, 대댓글 기능 kafka 이용해서 MQ방식으로 처리하기
 - kafka 설정 이후 톰캣 실행 시 무한루프 도는 문제 해결해야 함.
+
+#### 이슈 목록
+- Gson 사용 시 LocalDateTime을 포맷설정 해줘야 한다.
+- ModelMapper 변환 안되는 이슈
+  - 생성자가 정의되지 않아서 발생했던 것으로 추정
+    - @NoArgsConstructor
+    - @AllArgsConstructor
+    - @Data
