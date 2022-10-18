@@ -5,12 +5,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
+import project.toy.webtoon_copy.user.User;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -22,8 +22,6 @@ public class Comment {
     Long commentSeq;
 
     @NotNull
-    Long userSeq; // 1 : 1 관계 Entity로 변환하는게 나을 듯? Ui에서 보여줘야 할 정보는 유저아이디이기 때문에
-    @NotNull
     Long webtoonSeq;
     @NotNull
     String description;
@@ -34,4 +32,9 @@ public class Comment {
     @NotNull
     LocalDateTime createDt;
     LocalDateTime modifyDt;
+
+    @ManyToOne(optional = false, targetEntity = User.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "USERS_USER_SEQ")
+    User users;
+
 }

@@ -55,3 +55,4 @@
     - @NoArgsConstructor
     - @AllArgsConstructor
     - @Data
+- JPA 오랜만이라서 삽질 너무 많이한다..
