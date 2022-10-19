@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import project.toy.webtoon_copy.kakaopay.KakaoPay;
 import project.toy.webtoon_copy.kakaopay.KakaoPayApprovalVo;
 import project.toy.webtoon_copy.kakaopay.KakaoPayDto;
+import project.toy.webtoon_copy.user.UserDto;
+import project.toy.webtoon_copy.user.UserRepository;
 import project.toy.webtoon_copy.util.CheckUtils;
 
 import java.time.LocalDateTime;
@@ -21,12 +23,15 @@ public class CookieServiceImpl implements CookieService{
     CookieRepository cookieRepository;
 
     @Autowired
+    UserRepository userRepository;
+
+    @Autowired
     KakaoPay kakaoPay;
 
     @Override
-    public CookieDto createCookie(Long userSeq) {
+    public CookieDto createCookie(UserDto userDto) {
         CookieDto cookieDto = new CookieDto();
-        cookieDto.setUserSeq(userSeq);
+        cookieDto.setUser(userDto);
         Cookie cookie = mapper.map(cookieDto, Cookie.class);
         cookieRepository.save(cookie);
 
@@ -45,6 +50,11 @@ public class CookieServiceImpl implements CookieService{
         KakaoPayDto kakaoPayDto = kakaoPay.kakaoPayInfo(pg_token);
         return paymentAfter(kakaoPayDto);
     }
+
+//    @Override
+//    public Cookie findByCookieSeq(Long cookieSeq) {
+//        return cookieRepository.findByCookieSeq(cookieSeq);
+//    }
 
     private CookieDto paymentAfter(KakaoPayDto KakaoPayDto) {
         Cookie findCookie = cookieRepository.findByCookieSeq(KakaoPayDto.getCookieSeq());

@@ -2,6 +2,7 @@ package project.toy.webtoon_copy.webtoon;
 
 import com.sun.istack.NotNull;
 import org.hibernate.annotations.ColumnDefault;
+import project.toy.webtoon_copy.likewebtoon.LikeWebtoon;
 import project.toy.webtoon_copy.util.DayOfWeek;
 
 import javax.persistence.*;
@@ -26,4 +27,9 @@ public class Webtoon {
 
     String fileName;
     String originFileName;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "likeWebtoonSeq")
+    LikeWebtoon likeWebtoon;
+
 }

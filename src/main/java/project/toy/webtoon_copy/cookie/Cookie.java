@@ -1,14 +1,19 @@
 package project.toy.webtoon_copy.cookie;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.ColumnDefault;
+import project.toy.webtoon_copy.cookiehst.CookieHst;
+import project.toy.webtoon_copy.user.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -17,12 +22,16 @@ import java.time.LocalDateTime;
 public class Cookie {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long cookieSeq;
-    @NotNull
-    Long userSeq;
+    private Long cookieSeq;
     @Column(columnDefinition = "varchar(20) default '0'") // default 값 설정하는 거 처리해야 함.
-    String cookieCount;
+    private String cookieCount;
     @NotNull
-    LocalDateTime createDt;
-    LocalDateTime modifyDt;
+    private LocalDateTime createDt;
+    private LocalDateTime modifyDt;
+
+    @OneToOne
+    private User user;
+
+    @OneToMany(mappedBy = "cookie")
+    private List<CookieHst> cookieHst = new ArrayList<>();
 }

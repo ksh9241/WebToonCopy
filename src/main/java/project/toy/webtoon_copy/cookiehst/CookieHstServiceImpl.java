@@ -18,10 +18,11 @@ public class CookieHstServiceImpl implements CookieHstService{
 
     @Override
     public List<CookieHstDto> findAllbyCookieSeq(Long cookieSeq) {
-        List<CookieHst> cookieHst = cookieHstRepository.findAllByCookieSeq(cookieSeq);
+//        List<CookieHst> cookieHst = cookieHstRepository.findAllByCookieSeq(cookieSeq);
 
-        List<CookieHstDto> resultList = cookieHst.stream().map(entity -> mapper.map(entity, CookieHstDto.class)).collect(Collectors.toList());
-        return resultList;
+//        List<CookieHstDto> resultList = cookieHst.stream().map(entity -> mapper.map(entity, CookieHstDto.class)).collect(Collectors.toList());
+//        return resultList;
+        return null;
     }
 
     @Override

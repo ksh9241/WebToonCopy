@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
         UserDto resUserDto = mapper.map(user, UserDto.class);
 
         // 유저 별 쿠키 오브젝트 생성
-        CookieDto cookieDto = cookieService.createCookie(resUserDto.getUserSeq());
+        CookieDto cookieDto = cookieService.createCookie(resUserDto);
         resUserDto.setCookie(cookieDto);
 
         return resUserDto;

@@ -1,10 +1,12 @@
 package project.toy.webtoon_copy.comments;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
+import project.toy.webtoon_copy.cookiehst.CookieHst;
 import project.toy.webtoon_copy.user.User;
 
 import javax.persistence.*;
@@ -33,8 +35,8 @@ public class Comment {
     LocalDateTime createDt;
     LocalDateTime modifyDt;
 
-    @ManyToOne(optional = false, targetEntity = User.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "USERS_USER_SEQ")
-    User users;
-
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userSeq")
+    private User user;
 }

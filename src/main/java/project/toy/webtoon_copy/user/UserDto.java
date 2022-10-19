@@ -1,11 +1,9 @@
 package project.toy.webtoon_copy.user;
 
-import com.sun.istack.NotNull;
 import lombok.Data;
-import project.toy.webtoon_copy.comments.Comment;
-import project.toy.webtoon_copy.cookie.Cookie;
+import project.toy.webtoon_copy.comments.CommentDto;
 import project.toy.webtoon_copy.cookie.CookieDto;
-import project.toy.webtoon_copy.likewebtoon.LikeWebtoon;
+import project.toy.webtoon_copy.likewebtoon.LikeWebtoonDto;
 import project.toy.webtoon_copy.util.CheckUtils;
 import project.toy.webtoon_copy.util.Role;
 
@@ -23,9 +21,9 @@ public class UserDto {
     private Role role;
     private LocalDateTime createDt = LocalDateTime.now();
     private LocalDateTime modifyDt;
+    private List<CommentDto> comments;
     private CookieDto cookie;
-    private List<Comment> myComments;
-    private List<LikeWebtoon> myWebtoon;
+    private List<LikeWebtoonDto> likeWebtoons;
 
     // DTO 객체 필수값 체크
     public boolean validation() {

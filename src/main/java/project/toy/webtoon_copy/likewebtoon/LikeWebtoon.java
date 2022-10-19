@@ -1,11 +1,13 @@
 package project.toy.webtoon_copy.likewebtoon;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
+import project.toy.webtoon_copy.user.User;
+import project.toy.webtoon_copy.webtoon.Webtoon;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class LikeWebtoon {
@@ -18,4 +20,12 @@ public class LikeWebtoon {
     Long userSeq;
     String likeYn;
     String notiYn;
+
+    @OneToMany(mappedBy = "likeWebtoon")
+    private List<Webtoon> webtoonList = new ArrayList<>();
+
+//    @JsonIgnore
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "userSeq")
+//    private User user;
 }

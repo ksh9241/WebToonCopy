@@ -10,6 +10,8 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
+import project.toy.webtoon_copy.cookie.CookieRepository;
+import project.toy.webtoon_copy.cookie.CookieService;
 import project.toy.webtoon_copy.cookiehst.CookieHstDto;
 import project.toy.webtoon_copy.cookiehst.CookieHstService;
 import project.toy.webtoon_copy.cookiehst.PaymentCode;
@@ -32,6 +34,9 @@ public class KakaoPay {
 
     @Autowired
     private CookieHstService cookieHstService;
+
+    @Autowired
+    private CookieRepository cookieRepository;
 
     public String kakaoPayReady(KakaoPayDto kakaoPayDto) {
         RestTemplate restTemplate = new RestTemplate();
@@ -118,7 +123,7 @@ public class KakaoPay {
 
     private void createCookieHst() {
         CookieHstDto cookieHstDto = new CookieHstDto();
-        cookieHstDto.setCookieSeq(kakaoPayDto.getCookieSeq());
+        cookieHstDto.setCookie(cookieRepository.findByCookieSeq(kakaoPayDto.getCookieSeq()));
         cookieHstDto.setPaymentSttusCd(PaymentCode.A);
         cookieHstDto.setAmount(kakaoPayApprovalVo.getAmount().getTotal());
         cookieHstDto.setQuantity(kakaoPayApprovalVo.getQuantity());

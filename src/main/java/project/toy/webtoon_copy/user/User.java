@@ -8,6 +8,8 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Generated;
 import org.hibernate.annotations.GenerationTime;
 import project.toy.webtoon_copy.comments.Comment;
+import project.toy.webtoon_copy.cookie.Cookie;
+import project.toy.webtoon_copy.likewebtoon.LikeWebtoon;
 import project.toy.webtoon_copy.util.Role;
 
 import javax.persistence.*;
@@ -15,7 +17,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity(name = "Users")
+@Entity(name = "users")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -37,10 +39,13 @@ public class User {
     LocalDateTime createDt;
     LocalDateTime modifyDt;
 
-    @OneToMany(mappedBy = "users")
-    List<Comment> comments = new ArrayList<>();
+    @OneToMany(mappedBy = "user")
+    private List<Comment> comments = new ArrayList<>();
 
-    public void addComment(Comment comment) {
-        this.comments.add(comment);
-    }
+    @OneToOne
+    private Cookie cookie;
+
+//    @OneToMany(mappedBy = "user")
+//    private List<LikeWebtoon> likeWebtoons = new ArrayList<>();
+
 }
