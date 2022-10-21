@@ -3,6 +3,7 @@ package project.toy.webtoon_copy.cookiehst;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import project.toy.webtoon_copy.cookie.Cookie;
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 public class CookieHst {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -4,7 +4,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,11 +17,11 @@ public class CookieHstServiceImpl implements CookieHstService{
 
     @Override
     public List<CookieHstDto> findAllbyCookieSeq(Long cookieSeq) {
-//        List<CookieHst> cookieHst = cookieHstRepository.findAllByCookieSeq(cookieSeq);
+        List<CookieHst> cookieHst = cookieHstRepository.findAllByCookieSeq(cookieSeq);
 
-//        List<CookieHstDto> resultList = cookieHst.stream().map(entity -> mapper.map(entity, CookieHstDto.class)).collect(Collectors.toList());
-//        return resultList;
-        return null;
+        List<CookieHstDto> resultList = cookieHst.stream().map(entity -> mapper.map(entity, CookieHstDto.class)).collect(Collectors.toList());
+        return resultList;
+//        return null;
     }
 
     @Override

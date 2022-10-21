@@ -1,5 +1,6 @@
 package project.toy.webtoon_copy.kakaopay;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -10,6 +11,8 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
+import project.toy.webtoon_copy.cookie.Cookie;
+import project.toy.webtoon_copy.cookie.CookieDto;
 import project.toy.webtoon_copy.cookie.CookieRepository;
 import project.toy.webtoon_copy.cookie.CookieService;
 import project.toy.webtoon_copy.cookiehst.CookieHstDto;
@@ -37,6 +40,9 @@ public class KakaoPay {
 
     @Autowired
     private CookieRepository cookieRepository;
+
+    @Autowired
+    ModelMapper mapper;
 
     public String kakaoPayReady(KakaoPayDto kakaoPayDto) {
         RestTemplate restTemplate = new RestTemplate();
@@ -123,11 +129,14 @@ public class KakaoPay {
 
     private void createCookieHst() {
         CookieHstDto cookieHstDto = new CookieHstDto();
-        cookieHstDto.setCookie(cookieRepository.findByCookieSeq(kakaoPayDto.getCookieSeq()));
+        System.out.println("들어옴");
+        Cookie cookie = cookieRepository.findByCookieSeq(kakaoPayDto.getCookieSeq());
+        System.out.println("cookie == " + cookie);
+        cookieHstDto.setCookie(mapper.map(cookie, CookieDto.class));
         cookieHstDto.setPaymentSttusCd(PaymentCode.A);
         cookieHstDto.setAmount(kakaoPayApprovalVo.getAmount().getTotal());
         cookieHstDto.setQuantity(kakaoPayApprovalVo.getQuantity());
-
+        System.out.println("cookieHst == " + cookieHstDto);
         cookieHstService.createCookieHst(cookieHstDto);
     }
 
