@@ -2,10 +2,7 @@ package project.toy.webtoon_copy.cookiehst;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import project.toy.webtoon_copy.cookie.Cookie;
 import project.toy.webtoon_copy.user.User;
 
@@ -13,10 +10,10 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 public class CookieHst {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

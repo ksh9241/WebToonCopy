@@ -2,10 +2,7 @@ package project.toy.webtoon_copy.cookie;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import project.toy.webtoon_copy.cookiehst.CookieHst;
 import project.toy.webtoon_copy.user.User;
@@ -16,7 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Cookie {

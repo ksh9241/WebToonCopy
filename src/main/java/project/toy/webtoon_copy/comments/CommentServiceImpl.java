@@ -33,5 +33,12 @@ public class CommentServiceImpl implements CommentService{
         return resultDto;
     }
 
+    @Override
+    public CommentDto deleteComment(CommentDto commentDto) {
+
+        kafkaProducer.sendMessage(commentDto);
+        return null;
+    }
+
 
 }

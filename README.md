@@ -40,8 +40,7 @@
 
 ### 해야할 일
 - 근본적으로 JPA 디폴트 값이 0으로 들어가게 수정해야됨.
-- 댓글, 대댓글 기능 kafka 이용해서 MQ방식으로 처리하기
-- KakaoPay.createCookieHst 이력 2개이상 쌓을 때부터 에러뜸 확인 필요 
+- 댓글, 대댓글 기능 kafka 이용해서 MQ방식으로 처리하기 
 
 #### 이슈 목록
 - Gson 사용 시 LocalDateTime을 포맷설정 해줘야 한다.
@@ -52,3 +51,5 @@
     - @Data
 - JPA 오랜만이라서 삽질 너무 많이한다..
   - nativeQuery : JPA 에서 JPQL 사용 시 SQL을 직접 사용하는 것
+  - JPA StackOverflowError 이슈 발생
+    - @Data를 사용 시 JPA 조인 관계에서 toString을 사용하는데 양방향 관계로 인해 무한루프되는 문제가 발생 
