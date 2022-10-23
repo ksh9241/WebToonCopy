@@ -41,6 +41,9 @@
 ### 해야할 일
 - 근본적으로 JPA 디폴트 값이 0으로 들어가게 수정해야됨.
 - 댓글, 대댓글 기능 kafka 이용해서 MQ방식으로 처리하기 
+- 유저 생성 시 유저 테이블의 cookie_seq FK 값 안들어옴
+  - 쿠키 테이블의 유저 정보는 들어옴.
+- 결제 시 조회결과가 무한으로 조회되는 문제가 생겼음. (JPA 좀 봐야됨.)
 
 #### 이슈 목록
 - Gson 사용 시 LocalDateTime을 포맷설정 해줘야 한다.
@@ -53,3 +56,4 @@
   - nativeQuery : JPA 에서 JPQL 사용 시 SQL을 직접 사용하는 것
   - JPA StackOverflowError 이슈 발생
     - @Data를 사용 시 JPA 조인 관계에서 toString을 사용하는데 양방향 관계로 인해 무한루프되는 문제가 발생 
+  - LazyInitializationException : Fetch.Lazy일 때 이슈가 발생하며 @Transactional을 추가한다.

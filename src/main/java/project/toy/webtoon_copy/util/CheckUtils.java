@@ -9,4 +9,8 @@ public class CheckUtils {
         }
         return false;
     }
+
+    public static boolean isEmptyByObject(Object obj) {
+        return obj == null;
+    }
 }

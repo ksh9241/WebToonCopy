@@ -5,6 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import project.toy.webtoon_copy.kafka.KafkaProducer;
 
+import javax.transaction.Transactional;
+import java.time.LocalDateTime;
+
 @Service
 public class CommentServiceImpl implements CommentService{
     @Autowired
@@ -26,6 +29,7 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
+    @Transactional
     public CommentDto afterCreateComment(CommentDto commentDto) {
         Comment comment = mapper.map(commentDto, Comment.class);
         Comment resComment = commentRepository.save(comment);
@@ -35,10 +39,13 @@ public class CommentServiceImpl implements CommentService{
 
     @Override
     public CommentDto deleteComment(CommentDto commentDto) {
-
-        kafkaProducer.sendMessage(commentDto);
-        return null;
+        kafkaProducer.sendMessage(setRequiredDeleteVal(commentDto));
+        return commentDto;
     }
 
-
+    private CommentDto setRequiredDeleteVal (CommentDto commentDto) {
+        commentDto.setDeleteYn("Y");
+        commentDto.setModifyDt(LocalDateTime.now());
+        return commentDto;
+    }
 }

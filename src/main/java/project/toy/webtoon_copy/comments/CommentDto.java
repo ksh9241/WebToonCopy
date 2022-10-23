@@ -6,7 +6,10 @@ import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import project.toy.webtoon_copy.user.User;
+import project.toy.webtoon_copy.user.UserDto;
 import project.toy.webtoon_copy.util.CheckUtils;
+import project.toy.webtoon_copy.webtoon.Webtoon;
+import project.toy.webtoon_copy.webtoon.WebtoonDto;
 
 import java.time.LocalDateTime;
 
@@ -16,13 +19,14 @@ import java.time.LocalDateTime;
 public class CommentDto{
 
     Long commentSeq;
-    Long webtoonSeq;
     String description;
     Long likeCount;
     Long notLikeCount;
     LocalDateTime createDt = LocalDateTime.now();
     LocalDateTime modifyDt;
-    User user;
+    String deleteYn;
+    UserDto user;
+    WebtoonDto webtoon;
 
     public Exception checkUser() {
         if(CheckUtils.isEmpty(this.user.getUserSeq())) {

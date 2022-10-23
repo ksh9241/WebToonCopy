@@ -22,8 +22,8 @@ public class WebtoonDto {
     String webtoonName;
     String artist;
     DayOfWeek dayOfWeek;
-    Integer grade;
-    LocalDateTime createDt;
+    Float grade;
+    LocalDateTime createDt = LocalDateTime.now();
     LocalDateTime modifyDt;
     String fileName;
     String originFileName;

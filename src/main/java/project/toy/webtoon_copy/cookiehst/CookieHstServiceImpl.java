@@ -26,9 +26,7 @@ public class CookieHstServiceImpl implements CookieHstService{
 
     @Override
     public CookieHstDto createCookieHst(CookieHstDto cookieHstDto) {
-        System.out.println("dto == " + cookieHstDto);
         CookieHst cookieHst = mapper.map(cookieHstDto, CookieHst.class);
-        System.out.println("cookieHst == " + cookieHst);
         cookieHstRepository.save(cookieHst);
         CookieHstDto resultDto = mapper.map(cookieHst, CookieHstDto.class);
 

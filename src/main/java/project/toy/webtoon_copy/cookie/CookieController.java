@@ -36,6 +36,9 @@ public class CookieController {
         return resultMap;
     }
 
-    // 내일 할일
-    // 1. 카카오페이 오픈 api 구현 후 쿠키 충전 서비스 개발
+    @PutMapping("/useCookie")
+    public Map<String, String> useCookie(@RequestParam("userSeq") Long userSeq, @RequestParam("cookieValue") String cookieValue) {
+        Map<String, String> resultMap = cookieService.useCookie(userSeq, cookieValue);
+        return resultMap;
+    }
 }

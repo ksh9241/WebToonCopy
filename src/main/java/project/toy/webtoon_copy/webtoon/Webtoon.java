@@ -31,7 +31,7 @@ public class Webtoon {
     @NotNull @Enumerated(EnumType.STRING)
     DayOfWeek dayOfWeek;
     @ColumnDefault("0")
-    Integer grade;
+    Float grade; // 평점
     @NotNull
     LocalDateTime createDt;
     LocalDateTime modifyDt;

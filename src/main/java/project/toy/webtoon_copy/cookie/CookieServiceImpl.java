@@ -3,15 +3,22 @@ package project.toy.webtoon_copy.cookie;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import project.toy.webtoon_copy.cookiehst.CookieHstDto;
+import project.toy.webtoon_copy.cookiehst.CookieHstService;
+import project.toy.webtoon_copy.cookiehst.PaymentCode;
 import project.toy.webtoon_copy.kakaopay.KakaoPay;
 import project.toy.webtoon_copy.kakaopay.KakaoPayApprovalVo;
 import project.toy.webtoon_copy.kakaopay.KakaoPayDto;
+import project.toy.webtoon_copy.user.User;
 import project.toy.webtoon_copy.user.UserDto;
 import project.toy.webtoon_copy.user.UserRepository;
 import project.toy.webtoon_copy.util.CheckUtils;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class CookieServiceImpl implements CookieService{
@@ -27,6 +34,9 @@ public class CookieServiceImpl implements CookieService{
 
     @Autowired
     KakaoPay kakaoPay;
+
+    @Autowired
+    CookieHstService cookieHstService;
 
     @Override
     public CookieDto createCookie(UserDto userDto) {
@@ -46,9 +56,56 @@ public class CookieServiceImpl implements CookieService{
     }
 
     @Override
+    @Transactional
     public CookieDto kakaoPaySuccess(String pg_token) {
         KakaoPayDto kakaoPayDto = kakaoPay.kakaoPayInfo(pg_token);
         return paymentAfter(kakaoPayDto);
+    }
+
+    @Override
+    @Transactional
+    public Map<String, String> useCookie(Long userSeq, String cookieValue) {
+        Map<String, String> resultMap = new HashMap<>();
+
+        User user = userRepository.findByUserSeq(userSeq);
+        if (!CheckUtils.isEmptyByObject(user)) {
+            Cookie cookie = cookieRepository.findByCookieSeq(user.getCookie().getCookieSeq());
+            if (updateCookieCount(cookie, cookieValue)) {
+                resultMap.put("msg", "성공적으로 결제가 완료되었습니다.");
+            } else {
+                resultMap.put("msg", "잔액이 부족합니다.");
+            }
+        } else {
+            resultMap.put("msg", "유저 정보가 없습니다.");
+        }
+        return resultMap;
+    }
+
+    private boolean updateCookieCount(Cookie cookie, String cookieValue) {
+        boolean result = true;
+
+        if (CheckUtils.isEmpty(cookie.getCookieCount()) || Integer.parseInt(cookie.getCookieCount()) < Integer.parseInt(cookieValue)) {
+            return false;
+        }
+
+        String afterCookieCount = String.valueOf(Integer.parseInt(cookie.getCookieCount()) - Integer.parseInt(cookieValue));
+        cookie.setCookieCount(afterCookieCount);
+        cookie.setModifyDt(LocalDateTime.now());
+        Cookie resultCookie = cookieRepository.save(cookie);
+
+        cookieHstService.createCookieHst(initCookieHstDto(resultCookie, cookieValue));
+
+        return result;
+    }
+
+    private CookieHstDto initCookieHstDto(Cookie cookie, String cookieValue) {
+        CookieDto cookieDto = mapper.map(cookie, CookieDto.class);
+
+        CookieHstDto cookieHstDto = new CookieHstDto();
+        cookieHstDto.setCookie(cookieDto);
+        cookieHstDto.setQuantity(Integer.parseInt(cookieValue));
+        cookieHstDto.setPaymentSttusCd(PaymentCode.S);
+        return cookieHstDto;
     }
 
 //    @Override
