@@ -1,5 +1,7 @@
 package project.toy.webtoon_copy.cookie;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,6 +22,7 @@ public class CookieDto {
     String cookieCount;
     LocalDateTime createDt = LocalDateTime.now();
     LocalDateTime modifyDt;
+    @JsonBackReference
     UserDto user;
     List<CookieHst> cookieHst;
 }

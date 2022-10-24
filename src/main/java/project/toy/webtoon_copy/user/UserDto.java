@@ -1,5 +1,7 @@
 package project.toy.webtoon_copy.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import project.toy.webtoon_copy.comments.CommentDto;
 import project.toy.webtoon_copy.cookie.CookieDto;
@@ -22,6 +24,7 @@ public class UserDto {
     private LocalDateTime createDt = LocalDateTime.now();
     private LocalDateTime modifyDt;
     private List<CommentDto> comments;
+    @JsonManagedReference
     private CookieDto cookie;
     private List<LikeWebtoonDto> likeWebtoons;
 

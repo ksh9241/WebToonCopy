@@ -43,7 +43,8 @@
 - 댓글, 대댓글 기능 kafka 이용해서 MQ방식으로 처리하기 
 - 유저 생성 시 유저 테이블의 cookie_seq FK 값 안들어옴
   - 쿠키 테이블의 유저 정보는 들어옴.
-- 결제 시 조회결과가 무한으로 조회되는 문제가 생겼음. (JPA 좀 봐야됨.)
+- 카카오페이 결제취소 기능 구현 (https://developers.kakao.com/docs/latest/ko/kakaopay/cancellation)
+- SpringBatch로 쿠키 자동결제 여부 확인 후 개수 체크 이후 자동결제 처리?
 
 #### 이슈 목록
 - Gson 사용 시 LocalDateTime을 포맷설정 해줘야 한다.
@@ -57,3 +58,7 @@
   - JPA StackOverflowError 이슈 발생
     - @Data를 사용 시 JPA 조인 관계에서 toString을 사용하는데 양방향 관계로 인해 무한루프되는 문제가 발생 
   - LazyInitializationException : Fetch.Lazy일 때 이슈가 발생하며 @Transactional을 추가한다.
+
+- ModelMapper
+  - A Dto에 B 오브젝트 필드, B Dto에 A 오브젝트 필드 값이 존재 시 무한루프 됨.
+    - 해결방법으로 @JsonIgnore로 직렬화, 역직렬화 속성 무시 (DTO 필드에도 @JsonIgnore 사용가능)
