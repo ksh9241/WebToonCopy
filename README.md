@@ -45,6 +45,7 @@
   - 쿠키 테이블의 유저 정보는 들어옴.
 - 카카오페이 결제취소 기능 구현 (https://developers.kakao.com/docs/latest/ko/kakaopay/cancellation)
 - SpringBatch로 쿠키 자동결제 여부 확인 후 개수 체크 이후 자동결제 처리?
+- JPA 데이터 생성 후 최종 생성 건에 대해서 response 값으로 안나옴.
 
 #### 이슈 목록
 - Gson 사용 시 LocalDateTime을 포맷설정 해줘야 한다.

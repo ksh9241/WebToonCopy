@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import project.toy.webtoon_copy.cookiehst.CookieHstDto;
 import project.toy.webtoon_copy.kakaopay.KakaoPay;
 import project.toy.webtoon_copy.kakaopay.KakaoPayApprovalVo;
 import project.toy.webtoon_copy.kakaopay.KakaoPayDto;
@@ -34,6 +35,12 @@ public class CookieController {
         Map<String, CookieDto> resultMap = new HashMap<>();
         resultMap.put("res", result);
         return resultMap;
+    }
+
+    @PostMapping("/kakaoPayCancel")
+    public Map<String, CookieDto> kakaoPayCancel(@ModelAttribute CookieHstDto cookieHstDto) {
+        String resultCode = cookieService.kakaoPayCancel(cookieHstDto);
+        return null;
     }
 
     @PutMapping("/useCookie")

@@ -19,7 +19,7 @@ import java.util.List;
 @ToString
 public class CookieDto {
     Long cookieSeq;
-    String cookieCount;
+    Long cookieCount;
     LocalDateTime createDt = LocalDateTime.now();
     LocalDateTime modifyDt;
     @JsonBackReference

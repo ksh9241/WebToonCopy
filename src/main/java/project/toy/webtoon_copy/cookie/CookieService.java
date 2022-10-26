@@ -1,5 +1,6 @@
 package project.toy.webtoon_copy.cookie;
 
+import project.toy.webtoon_copy.cookiehst.CookieHstDto;
 import project.toy.webtoon_copy.kakaopay.KakaoPayDto;
 import project.toy.webtoon_copy.user.UserDto;
 
@@ -15,6 +16,8 @@ public interface CookieService {
     CookieDto kakaoPaySuccess(String pg_token);
 
     Map<String, String> useCookie(Long userSeq, String cookieValue);
+
+    String kakaoPayCancel(CookieHstDto cookieHstDto);
 
 //    Cookie findByCookieSeq(Long cookieSeq);
 //    List<CookieDto> findPaymentHst(Long cookieSeq);

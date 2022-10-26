@@ -27,8 +27,8 @@ public class CookieHstServiceImpl implements CookieHstService{
     @Override
     public CookieHstDto createCookieHst(CookieHstDto cookieHstDto) {
         CookieHst cookieHst = mapper.map(cookieHstDto, CookieHst.class);
-        cookieHstRepository.save(cookieHst);
-        CookieHstDto resultDto = mapper.map(cookieHst, CookieHstDto.class);
+        CookieHst resultCookieHst = cookieHstRepository.save(cookieHst);
+        CookieHstDto resultDto = mapper.map(resultCookieHst, CookieHstDto.class);
 
         return resultDto;
     }

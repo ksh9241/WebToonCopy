@@ -81,14 +81,19 @@ public class CookieServiceImpl implements CookieService{
         return resultMap;
     }
 
+    @Override
+    public String kakaoPayCancel(CookieHstDto cookieHstDto) {
+        return kakaoPay.kakaoPayCancel(cookieHstDto);
+    }
+
     private boolean updateCookieCount(Cookie cookie, String cookieValue) {
         boolean result = true;
 
-        if (CheckUtils.isEmpty(cookie.getCookieCount()) || Integer.parseInt(cookie.getCookieCount()) < Integer.parseInt(cookieValue)) {
+        if (CheckUtils.isEmpty(cookie.getCookieCount()) || cookie.getCookieCount() < Integer.parseInt(cookieValue)) {
             return false;
         }
 
-        String afterCookieCount = String.valueOf(Integer.parseInt(cookie.getCookieCount()) - Integer.parseInt(cookieValue));
+        Long afterCookieCount = cookie.getCookieCount() - Integer.parseInt(cookieValue);
         cookie.setCookieCount(afterCookieCount);
         cookie.setModifyDt(LocalDateTime.now());
         Cookie resultCookie = cookieRepository.save(cookie);
@@ -116,7 +121,7 @@ public class CookieServiceImpl implements CookieService{
     private CookieDto paymentAfter(KakaoPayDto KakaoPayDto) {
         Cookie findCookie = cookieRepository.findByCookieSeq(KakaoPayDto.getCookieSeq());
 
-        String calcCookieCount = calcCookieCount(findCookie.getCookieCount(), KakaoPayDto.getQuantity());
+        Long calcCookieCount = calcCookieCount(findCookie.getCookieCount(), KakaoPayDto.getQuantity());
         findCookie.setCookieCount(calcCookieCount);
         findCookie.setModifyDt(LocalDateTime.now());
         cookieRepository.save(findCookie);
@@ -125,8 +130,8 @@ public class CookieServiceImpl implements CookieService{
         return resultDto;
     }
 
-    private String calcCookieCount(String leftVal, String rightVal) {
-        if (CheckUtils.isEmpty(leftVal)) leftVal = "0"; // 근본적으로 JPA 디폴트 값이 0으로 들어가게 수정해야됨.
-        return "" + (Integer.parseInt(leftVal) + Integer.parseInt(rightVal));
+    private Long calcCookieCount(Long leftVal, String rightVal) {
+        if (CheckUtils.isEmpty(leftVal) || leftVal == 0) leftVal = 0L; // 근본적으로 JPA 디폴트 값이 0으로 들어가게 수정해야됨.
+        return leftVal + Long.parseLong(rightVal);
     }
 }

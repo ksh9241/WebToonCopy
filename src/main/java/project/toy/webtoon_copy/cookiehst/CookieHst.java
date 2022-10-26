@@ -29,6 +29,8 @@ public class CookieHst {
     LocalDateTime efctStDt;
     @NotNull
     LocalDateTime efctFnsDt;
+    String tid;
+    String cid;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)

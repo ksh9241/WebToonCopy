@@ -19,5 +19,7 @@ public class CookieHstDto {
     LocalDateTime modifyDt;
     LocalDateTime efctStDt = LocalDateTime.now();
     LocalDateTime efctFnsDt = LocalDateTime.of(9999, 12, 31, 23, 59, 59);
+    String tid; // 결제 고유 PK
+    String cid; // 가맹점 코드
     CookieDto cookie;
 }

@@ -22,8 +22,8 @@ public class Cookie {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cookieSeq;
-    @Column(columnDefinition = "varchar(20) default '0'") // default 값 설정하는 거 처리해야 함.
-    private String cookieCount;
+    @Column(columnDefinition = "bigint(20) default '0'") // default 값 설정하는 거 처리해야 함.
+    private Long cookieCount;
     @NotNull
     private LocalDateTime createDt;
     private LocalDateTime modifyDt;
