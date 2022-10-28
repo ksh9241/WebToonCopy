@@ -28,7 +28,7 @@ public class Cookie {
     private LocalDateTime createDt;
     private LocalDateTime modifyDt;
 
-    @OneToOne(mappedBy = "cookie")
+    @OneToOne
     private User user;
 
     @OneToMany(mappedBy = "cookie")

@@ -17,7 +17,7 @@ public interface CookieService {
 
     Map<String, String> useCookie(Long userSeq, String cookieValue);
 
-    String kakaoPayCancel(CookieHstDto cookieHstDto);
+    String kakaoPayCancel(Long cookieHstSeq);
 
 //    Cookie findByCookieSeq(Long cookieSeq);
 //    List<CookieDto> findPaymentHst(Long cookieSeq);

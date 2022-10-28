@@ -32,7 +32,7 @@ public class CookieHst {
     String tid;
     String cid;
 
-    @JsonIgnore
+//    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cookieSeq")
     private Cookie cookie;

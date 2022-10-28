@@ -4,6 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import project.toy.webtoon_copy.cookiehst.CookieHst;
 import project.toy.webtoon_copy.cookiehst.CookieHstDto;
 import project.toy.webtoon_copy.cookiehst.CookieHstService;
 import project.toy.webtoon_copy.cookiehst.PaymentCode;
@@ -82,7 +83,9 @@ public class CookieServiceImpl implements CookieService{
     }
 
     @Override
-    public String kakaoPayCancel(CookieHstDto cookieHstDto) {
+    public String kakaoPayCancel(Long cookieHstSeq) {
+        CookieHstDto cookieHstDto = cookieHstService.findByCookieHstSeq(cookieHstSeq);
+        System.out.println("cookieServiceImple == " + cookieHstDto);
         return kakaoPay.kakaoPayCancel(cookieHstDto);
     }
 

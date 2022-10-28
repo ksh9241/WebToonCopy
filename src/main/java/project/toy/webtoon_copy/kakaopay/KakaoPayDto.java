@@ -14,7 +14,6 @@ import project.toy.webtoon_copy.util.CheckUtils;
 public class KakaoPayDto {
 
     private Long cookieSeq;
-    @Value("${kakao-cid}")
     private String cid;
     private String partnerOrderId;
     private String partnerUserId;
@@ -22,23 +21,20 @@ public class KakaoPayDto {
     private String quantity;
     private String totalAmount;
     private String taxFreeAmount;
-    @Value("${kakao-approvalUrl}")
     private String approvalUrl;
-    @Value("${kakao-cancelUrl}")
     private String cancelUrl;
-    @Value("${kakao-failUrl}")
     private String failUrl;
 
-    public void valueSetUp() {
-//        if(CheckUtils.isEmpty(cid)) cid = "TC0ONETIME";
+    public void valueSetUp(String cid, String approvalUrl, String cancelUrl, String failUrl) {
+        this.cid = cid;
+        this.approvalUrl = approvalUrl;
+        this.cancelUrl = cancelUrl;
+        this. failUrl = failUrl;
         if(CheckUtils.isEmpty(partnerOrderId)) partnerOrderId = "1001";
         if(CheckUtils.isEmpty(partnerUserId)) partnerUserId = "gorany";
         if(CheckUtils.isEmpty(itemName)) itemName = "쿠키";
         if(CheckUtils.isEmpty(quantity)) quantity = "1";
         if(CheckUtils.isEmpty(totalAmount)) totalAmount = String.valueOf(Integer.parseInt(quantity) * 100);
         if(CheckUtils.isEmpty(taxFreeAmount)) taxFreeAmount = totalAmount.substring(0, totalAmount.length() - 1);
-//        if(CheckUtils.isEmpty(approvalUrl)) approvalUrl = "";
-//        if(CheckUtils.isEmpty(cancelUrl)) cancelUrl = "";
-//        if(CheckUtils.isEmpty(failUrl)) failUrl = "";
     }
 }

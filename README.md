@@ -59,6 +59,7 @@
   - JPA StackOverflowError 이슈 발생
     - @Data를 사용 시 JPA 조인 관계에서 toString을 사용하는데 양방향 관계로 인해 무한루프되는 문제가 발생 
   - LazyInitializationException : Fetch.Lazy일 때 이슈가 발생하며 @Transactional을 추가한다.
+    - Fetch Join으로 JPQL 을 사용한다.
 
 - ModelMapper
   - A Dto에 B 오브젝트 필드, B Dto에 A 오브젝트 필드 값이 존재 시 무한루프 됨.

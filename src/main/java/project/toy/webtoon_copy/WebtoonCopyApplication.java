@@ -1,6 +1,7 @@
 package project.toy.webtoon_copy;
 
 import com.google.gson.*;
+import org.hibernate.collection.spi.PersistentCollection;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.boot.SpringApplication;
@@ -23,7 +24,9 @@ public class WebtoonCopyApplication {
 	@Bean
 	public ModelMapper modelMapper() {
 		ModelMapper modelMapper = new ModelMapper();
-		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT)
+				.setPropertyCondition(context -> !(context.getSource() instanceof PersistentCollection)) // LazyInitializationException: could not initialize proxy 발생 시
+		;
 		return modelMapper;
 	}
 

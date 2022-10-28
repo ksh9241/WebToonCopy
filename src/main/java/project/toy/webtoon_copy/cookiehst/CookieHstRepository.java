@@ -9,4 +9,8 @@ import java.util.List;
 public interface CookieHstRepository extends JpaRepository<CookieHst, Long> {
     @Query(value = "SELECT A.* FROM cookie_hst A WHERE A.cookie_seq = :cookieSeq", nativeQuery = true)
     List<CookieHst> findAllByCookieSeq(@Param("cookieSeq") Long cookieDto);
+
+    @Query(value = "SELECT * FROM cookie_hst A, cookie B WHERE A.cookie_hst_seq = :cookieHstSeq AND A.cookie_seq = B.cookie_seq", nativeQuery = true)
+//    @Query(value = "SELECT A FROM CookieHst A JOIN FETCH A.cookie WHERE A.cookieHstSeq = :cookieHstSeq")
+    CookieHst findByCookieHstSeq(@Param("cookieHstSeq") Long cookieHstSeq);
 }

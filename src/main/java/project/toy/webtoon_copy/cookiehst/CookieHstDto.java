@@ -1,8 +1,11 @@
 package project.toy.webtoon_copy.cookiehst;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import project.toy.webtoon_copy.cookie.CookieDto;
 
 import java.time.LocalDateTime;
@@ -10,6 +13,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class CookieHstDto {
     Long cookieHstSeq;
     PaymentCode paymentSttusCd;
