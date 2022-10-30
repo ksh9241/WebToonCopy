@@ -16,10 +16,12 @@ import java.time.LocalDateTime;
 @Setter
 public class CookieHst {
 
+    // 공통 부분 따로 엔티티 만들어서 상속받기
+    // createDt, modifyDt, efctStDt, efctFnsDt
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long cookieHstSeq;
     @NotNull @Enumerated(EnumType.STRING)
-    PaymentCode paymentSttusCd;
+    PaymentCode paymentStatusCd; // CookieHstType
     Integer amount;
     Integer quantity;
     @NotNull
@@ -34,7 +36,7 @@ public class CookieHst {
 
 //    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cookieSeq")
+//    @JoinColumn(name = "cookieSeq")
     private Cookie cookie;
 
 }

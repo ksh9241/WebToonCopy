@@ -17,6 +17,7 @@ import java.util.List;
 @Getter
 @Setter
 public class UserDto {
+//
 
     private Long userSeq;
     private String userId;

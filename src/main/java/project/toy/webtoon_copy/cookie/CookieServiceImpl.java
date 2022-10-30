@@ -40,15 +40,15 @@ public class CookieServiceImpl implements CookieService{
     CookieHstService cookieHstService;
 
     @Override
-    public CookieDto createCookie(UserDto userDto) {
+    public Cookie createCookie(UserDto userDto) {
         CookieDto cookieDto = new CookieDto();
         cookieDto.setUser(userDto);
         Cookie cookie = mapper.map(cookieDto, Cookie.class);
         cookieRepository.save(cookie);
 
-        CookieDto resCookieDto = mapper.map(cookie, CookieDto.class);
+//        CookieDto resCookieDto = mapper.map(cookie, CookieDto.class);
 
-        return resCookieDto;
+        return cookie;
     }
 
     @Override
@@ -65,29 +65,33 @@ public class CookieServiceImpl implements CookieService{
 
     @Override
     @Transactional
-    public Map<String, String> useCookie(Long userSeq, String cookieValue) {
+//    public Map<String, String> useCookie(Long userSeq, String cookieValue) {
+        public void useCookie(Long userSeq, String cookieValue) { // if 조건에 대한 부분들은 예외로 던지고 아무 예외 없을 시 성공
         Map<String, String> resultMap = new HashMap<>();
 
-        User user = userRepository.findByUserSeq(userSeq);
-        if (!CheckUtils.isEmptyByObject(user)) {
-            Cookie cookie = cookieRepository.findByCookieSeq(user.getCookie().getCookieSeq());
-            if (updateCookieCount(cookie, cookieValue)) {
-                resultMap.put("msg", "성공적으로 결제가 완료되었습니다.");
-            } else {
-                resultMap.put("msg", "잔액이 부족합니다.");
-            }
-        } else {
-            resultMap.put("msg", "유저 정보가 없습니다.");
-        }
-        return resultMap;
+        User user = userRepository.findByUserSeq(userSeq); // Optional로 바꾸기
+        // if 조건 다 지우고 상태 체크는 엔티티에서 직접 처리하고 예외 아닐 시 status 200 던짐
+//        if (!CheckUtils.isEmptyByObject(user)) {
+            //Cookie cookie = cookieRepository.findByCookieSeq(user.getCookie().getCookieSeq());
+//            if (updateCookieCount(cookie, cookieValue)) { // 이 부분 CookieEntity에서 메서드로 처리
+//                resultMap.put("msg", "성공적으로 결제가 완료되었습니다.");
+//            } else {
+//                resultMap.put("msg", "잔액이 부족합니다.");
+//            }
+//        } else {
+//            resultMap.put("msg", "유저 정보가 없습니다.");
+//        }
+//        return resultMap;
     }
 
     @Override
-    public String kakaoPayCancel(Long cookieHstSeq) {
+//    public String kakaoPayCancel(Long cookieHstSeq) {
+    public String cancelCookieHst(Long cookieHstSeq) {
         CookieHstDto cookieHstDto = cookieHstService.findByCookieHstSeq(cookieHstSeq);
         return kakaoPay.kakaoPayCancel(cookieHstDto);
     }
 
+    //
     private boolean updateCookieCount(Cookie cookie, String cookieValue) {
         boolean result = true;
 

@@ -29,7 +29,7 @@ public class CookieController {
         response.sendRedirect(url);
     }
 
-    @GetMapping("/kakaoPaySuccess")
+    @GetMapping("/kakaopay-success") // RestFul URL 규칙
     public Map<String, CookieDto> kakaoPaySuccess(@RequestParam("pg_token") String pg_token, Model model) {
         CookieDto result = cookieService.kakaoPaySuccess(pg_token);
         Map<String, CookieDto> resultMap = new HashMap<>();
@@ -37,15 +37,15 @@ public class CookieController {
         return resultMap;
     }
 
-    @PostMapping("/kakaoPayCancel")
+    @PostMapping("/kakaopay-cancel")
     public String kakaoPayCancel(@RequestParam("cookieHstSeq") Long cookieHstSeq) {
         String resultCode = cookieService.kakaoPayCancel(cookieHstSeq);
         return resultCode;
     }
 
-    @PutMapping("/useCookie")
-    public Map<String, String> useCookie(@RequestParam("userSeq") Long userSeq, @RequestParam("cookieValue") String cookieValue) {
-        Map<String, String> resultMap = cookieService.useCookie(userSeq, cookieValue);
+    @PutMapping("/use")
+    public Map<String, String> use(@RequestParam("userSeq") Long userSeq, @RequestParam("cookieValue") String cookieValue) {
+        Map<String, String> resultMap = cookieService.use(userSeq, cookieValue);    // 명칭변경
         return resultMap;
     }
 }

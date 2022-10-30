@@ -6,6 +6,7 @@ import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import project.toy.webtoon_copy.cookiehst.CookieHst;
+import project.toy.webtoon_copy.subcomments.SubComments;
 import project.toy.webtoon_copy.user.User;
 import project.toy.webtoon_copy.webtoon.Webtoon;
 
@@ -45,4 +46,7 @@ public class Comment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "webtoonSeq")
     private Webtoon webtoon;
+
+    @OneToMany(mappedBy = "comment")
+    private List<SubComments> subComments = new ArrayList<>();
 }

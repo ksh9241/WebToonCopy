@@ -14,8 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter
-@Setter
+//@Getter
+//@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Cookie {
@@ -33,4 +33,14 @@ public class Cookie {
 
     @OneToMany(mappedBy = "cookie")
     private List<CookieHst> cookieHst = new ArrayList<>();
+
+    // 자체적인 오브젝트 내에서 처리하는 로직을 수행한다.
+    public void useCookie(int count) {
+        if (cookieCount < count) {
+            throw new IllegalStateException();
+        }
+
+        cookieCount -= count;
+    }
+
 }

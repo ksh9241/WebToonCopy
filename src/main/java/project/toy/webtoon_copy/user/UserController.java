@@ -20,5 +20,4 @@ public class UserController {
         map.put("user", resUserDto);
         return map;
     }
-    
 }

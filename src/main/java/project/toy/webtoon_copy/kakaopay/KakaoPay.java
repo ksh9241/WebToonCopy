@@ -25,6 +25,8 @@ import java.net.URISyntaxException;
 import java.time.LocalDateTime;
 
 @Service
+// 카카오페이 기능에서 결제 관련 내용 빼고 다 다른 곳으로 옮겨야 함.
+// DTO로 받는게 아닌 command나 혹은 매개변수에서 필요한 값만 받기
 public class KakaoPay {
 
     private static final String HOST = "https://kapi.kakao.com";
@@ -40,10 +42,12 @@ public class KakaoPay {
     @Value("${kakao-failUrl}")
     private String failUrl;
 
+    // 싱글톤이라 이전 결과에 대한 데이터가 남아있어서 문제됨.
     private KakaoPayVo kakaoPayVo;
     private KakaoPayApprovalVo kakaoPayApprovalVo;
     private KakaoPayDto kakaoPayDto;
 
+    // 생성자 주입에 대한 부분 복습
     @Autowired
     private CookieHstService cookieHstService;
 
@@ -156,11 +160,12 @@ public class KakaoPay {
         cookieHstService.createCookieHst(cookieHstDto);
     }
 
-    public String kakaoPayCancel(CookieHstDto cookieHstDto) {
+    // 이 부분 cookieHst 처리 후 호출해서 카카오 페이 결제 취소만 하면 되는데 역할에 대한 침범이니까 이 부분 교체
+    public String kakaoPayCancel(CookieHstDto cookieHstDto) { // Cid, Tid, Amount
         RestTemplate restTemplate = new RestTemplate();
 
         cookieHstDto = findCookieInCookieDto(cookieHstDto, cookieHstDto.getCookie().getCookieSeq());
-        if (cancelCookieCountCheck(cookieHstDto)) {
+        if (cancelCookieCountCheck(cookieHstDto)) { // 이 부분도 CookieHst 도메인에서 처리
             return "쿠키 개수가 부족합니다.";
         }
 
@@ -188,10 +193,10 @@ public class KakaoPay {
                     .postForObject(new URI(HOST + "/v1/payment/cancel"), body, KakaoPayVo.class);
 
             if ("CANCEL_PAYMENT".equals(kakaoPayVo.getStatus())) {
-                cancelCookieHst(cookieHstDto);  // 충전 이력 만료
-                createCookieHst(cookieHstDto);  // 취소 이력 생성
-                updateCancelCookie(cookieHstDto);   // 쿠키 개수 수정
-
+                // 이 부분도 빼고 에러 시 예외반환 해서 트랜잭션 롤백처리만
+//                cancelCookieHst(cookieHstDto);  // 충전 이력 만료
+//                createCookieHst(cookieHstDto);  // 취소 이력 생성
+//                updateCancelCookie(cookieHstDto);   // 쿠키 개수 수정
             }
 
             return kakaoPayVo.getStatus();

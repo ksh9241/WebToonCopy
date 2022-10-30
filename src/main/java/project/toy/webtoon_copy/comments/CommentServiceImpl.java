@@ -33,6 +33,7 @@ public class CommentServiceImpl implements CommentService{
     public CommentDto afterCreateComment(CommentDto commentDto) {
         Comment comment = mapper.map(commentDto, Comment.class);
         Comment resComment = commentRepository.save(comment);
+//        commentRepository.getReferenceById() // proxy 객체를 생성 (유저아이디만 넘겨서 프록시 객체를 생성함.)
         CommentDto resultDto = mapper.map(resComment, CommentDto.class);
         return resultDto;
     }

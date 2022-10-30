@@ -2,11 +2,9 @@ package project.toy.webtoon_copy.subcomments;
 
 import com.sun.istack.NotNull;
 import org.hibernate.annotations.ColumnDefault;
+import project.toy.webtoon_copy.comments.Comment;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
@@ -14,10 +12,10 @@ public class SubComments {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long subCommentSeq;
 
-    @NotNull
-    Long userSeq;
-    @NotNull
-    Long commentSeq;
+//    @NotNull
+//    Long userSeq;
+//    @NotNull
+//    Long commentSeq;
     @NotNull
     String description;
     @ColumnDefault("0")
@@ -27,4 +25,7 @@ public class SubComments {
     @NotNull
     LocalDateTime createDt;
     LocalDateTime modifyDt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Comment comment;
 }

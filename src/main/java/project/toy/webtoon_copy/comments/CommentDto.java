@@ -1,8 +1,6 @@
 package project.toy.webtoon_copy.comments;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import project.toy.webtoon_copy.user.User;
@@ -13,10 +11,11 @@ import project.toy.webtoon_copy.webtoon.WebtoonDto;
 
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CommentDto{
+public class CommentDto{ // Req, Res로 나눠서 관리하기. (변경에 취약해짐)
 
     Long commentSeq;
     String description;
@@ -25,11 +24,11 @@ public class CommentDto{
     LocalDateTime createDt = LocalDateTime.now();
     LocalDateTime modifyDt;
     String deleteYn;
-    UserDto user;
-    WebtoonDto webtoon;
+    UserDto userDto;
+    WebtoonDto webtoonDto;
 
     public Exception checkUser() {
-        if(CheckUtils.isEmpty(this.user.getUserSeq())) {
+        if(CheckUtils.isEmpty(this.userDto.getUserSeq())) {
             throw new UsernameNotFoundException("유저만 댓글을 입력할 수 있습니다.");
         }
         return null;

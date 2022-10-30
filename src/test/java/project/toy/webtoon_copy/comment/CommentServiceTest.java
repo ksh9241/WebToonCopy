@@ -15,7 +15,7 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.notNullValue;
 
-@SpringBootTest
+@SpringBootTest // 트랜잭션을 넣어줘야 함. (롤백이 안되기 때문에)
 public class CommentServiceTest {
 
     @Autowired
