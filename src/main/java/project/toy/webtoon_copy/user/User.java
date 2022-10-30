@@ -43,7 +43,7 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Comment> comments = new ArrayList<>();
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     private Cookie cookie;
 
 //    @OneToMany(mappedBy = "user")

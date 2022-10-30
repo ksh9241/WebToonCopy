@@ -85,7 +85,6 @@ public class CookieServiceImpl implements CookieService{
     @Override
     public String kakaoPayCancel(Long cookieHstSeq) {
         CookieHstDto cookieHstDto = cookieHstService.findByCookieHstSeq(cookieHstSeq);
-        System.out.println("cookieServiceImple == " + cookieHstDto);
         return kakaoPay.kakaoPayCancel(cookieHstDto);
     }
 

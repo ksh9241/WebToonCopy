@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.toy.webtoon_copy.cookie.Cookie;
+import project.toy.webtoon_copy.user.User;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -37,10 +38,9 @@ public class CookieHstServiceImpl implements CookieHstService{
     }
 
     @Override
+    @Transactional(readOnly = true)
     public CookieHstDto findByCookieHstSeq(Long cookieHstSeq) {
         CookieHst cookieHst = cookieHstRepository.findByCookieHstSeq(cookieHstSeq);
-        Cookie cookie = cookieHst.getCookie();
-        System.out.println("cookie == "+cookie);
         CookieHstDto resCookieHstDto = mapper.map(cookieHst, CookieHstDto.class);
         return resCookieHstDto;
     }
@@ -48,6 +48,7 @@ public class CookieHstServiceImpl implements CookieHstService{
     @Override
     public CookieHstDto cancelCookieHst(CookieHstDto cookieHstDto) {
         cookieHstDto.setEfctFnsDt(LocalDateTime.now());
+        cookieHstDto.setModifyDt(LocalDateTime.now());
         CookieHst cookieHst = mapper.map(cookieHstDto, CookieHst.class);
         cookieHstRepository.save(cookieHst);
         return null;

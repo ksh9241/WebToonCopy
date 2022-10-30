@@ -3,6 +3,8 @@ package project.toy.webtoon_copy.user;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import project.toy.webtoon_copy.comments.CommentDto;
 import project.toy.webtoon_copy.cookie.CookieDto;
 import project.toy.webtoon_copy.likewebtoon.LikeWebtoonDto;
@@ -12,7 +14,8 @@ import project.toy.webtoon_copy.util.Role;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 public class UserDto {
 
     private Long userSeq;

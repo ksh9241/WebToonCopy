@@ -26,6 +26,7 @@ public class WebtoonCopyApplication {
 		ModelMapper modelMapper = new ModelMapper();
 		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT)
 				.setPropertyCondition(context -> !(context.getSource() instanceof PersistentCollection)) // LazyInitializationException: could not initialize proxy 발생 시
+				.setSkipNullEnabled(true)
 		;
 		return modelMapper;
 	}

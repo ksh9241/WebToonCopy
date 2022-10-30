@@ -38,9 +38,9 @@ public class CookieController {
     }
 
     @PostMapping("/kakaoPayCancel")
-    public Map<String, CookieDto> kakaoPayCancel(@RequestParam("cookieHstSeq") Long cookieHstSeq) {
+    public String kakaoPayCancel(@RequestParam("cookieHstSeq") Long cookieHstSeq) {
         String resultCode = cookieService.kakaoPayCancel(cookieHstSeq);
-        return null;
+        return resultCode;
     }
 
     @PutMapping("/useCookie")

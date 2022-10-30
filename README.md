@@ -10,6 +10,8 @@
   - 댓글은 kafka를 이용한 Message Queue 방식으로 처리가 진행되어야 한다.
 - 쿠키
   - 쿠키는 결제 API를 통해 이루어져야 한다.
+  - 결제 취소 API를 통해 결제취소가 이루어져야 한다.
+  - 쿠키 자동결제 여부, 자동결제 갯수 컬럼 추가 및 Spring Batch 구현 (할일)
 - 관리자
   - 관리자는 웹툰의 등록, 수정, 삭제가 가능해야 한다.
 
@@ -43,9 +45,7 @@
 - 댓글, 대댓글 기능 kafka 이용해서 MQ방식으로 처리하기 
 - 유저 생성 시 유저 테이블의 cookie_seq FK 값 안들어옴
   - 쿠키 테이블의 유저 정보는 들어옴.
-- 카카오페이 결제취소 기능 구현 (https://developers.kakao.com/docs/latest/ko/kakaopay/cancellation)
 - SpringBatch로 쿠키 자동결제 여부 확인 후 개수 체크 이후 자동결제 처리?
-- JPA 데이터 생성 후 최종 생성 건에 대해서 response 값으로 안나옴.
 
 #### 이슈 목록
 - Gson 사용 시 LocalDateTime을 포맷설정 해줘야 한다.
@@ -64,3 +64,4 @@
 - ModelMapper
   - A Dto에 B 오브젝트 필드, B Dto에 A 오브젝트 필드 값이 존재 시 무한루프 됨.
     - 해결방법으로 @JsonIgnore로 직렬화, 역직렬화 속성 무시 (DTO 필드에도 @JsonIgnore 사용가능)
+    - @ToString 사용 지양

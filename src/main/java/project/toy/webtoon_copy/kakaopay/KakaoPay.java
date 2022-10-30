@@ -22,6 +22,7 @@ import project.toy.webtoon_copy.util.CheckUtils;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.LocalDateTime;
 
 @Service
 public class KakaoPay {
@@ -117,7 +118,7 @@ public class KakaoPay {
         try {
             kakaoPayApprovalVo = restTemplate.postForObject(new URI(HOST + "/v1/payment/approve"), body, KakaoPayApprovalVo.class);
             if (successPayment()) {
-                createCookieHst();
+                createCookieHst(new CookieHstDto());
             }
 
             return kakaoPayDto;
@@ -135,14 +136,23 @@ public class KakaoPay {
     }
 
     // 결제, 결제취소에 대한 메서드로 변경해야 됨.
-    private void createCookieHst() {
-        CookieHstDto cookieHstDto = new CookieHstDto();
-        cookieHstDto = findCookieInCookieDto(cookieHstDto, kakaoPayDto.getCookieSeq());
-        cookieHstDto.setPaymentSttusCd(PaymentCode.A);
-        cookieHstDto.setAmount(kakaoPayApprovalVo.getAmount().getTotal());
-        cookieHstDto.setQuantity(kakaoPayApprovalVo.getQuantity());
-        cookieHstDto.setTid(kakaoPayVo.getTid());
-        cookieHstDto.setCid(kakaoPayApprovalVo.getCid());
+    private void createCookieHst(CookieHstDto cookieHstDto) {
+        // 결제 시 필수값 설정
+        if (CheckUtils.isEmpty(cookieHstDto.getPaymentSttusCd())) {
+            cookieHstDto = findCookieInCookieDto(cookieHstDto, kakaoPayDto.getCookieSeq());
+            cookieHstDto.setPaymentSttusCd(PaymentCode.A);
+            cookieHstDto.setAmount(kakaoPayApprovalVo.getAmount().getTotal());
+            cookieHstDto.setQuantity(kakaoPayApprovalVo.getQuantity());
+            cookieHstDto.setTid(kakaoPayVo.getTid());
+            cookieHstDto.setCid(kakaoPayApprovalVo.getCid());
+        } else {
+            cookieHstDto.setCookieHstSeq(null);
+            cookieHstDto.setCreateDt(LocalDateTime.now());
+            cookieHstDto.setEfctFnsDt(LocalDateTime.of(9999, 12, 31, 23, 59, 59));
+            cookieHstDto.setPaymentSttusCd(PaymentCode.C);
+            cookieHstDto.setTid(kakaoPayVo.getTid());
+        }
+
         cookieHstService.createCookieHst(cookieHstDto);
     }
 
@@ -178,8 +188,10 @@ public class KakaoPay {
                     .postForObject(new URI(HOST + "/v1/payment/cancel"), body, KakaoPayVo.class);
 
             if ("CANCEL_PAYMENT".equals(kakaoPayVo.getStatus())) {
-                cancelCookieHst(cookieHstDto);
-//                createCookieHst();
+                cancelCookieHst(cookieHstDto);  // 충전 이력 만료
+                createCookieHst(cookieHstDto);  // 취소 이력 생성
+                updateCancelCookie(cookieHstDto);   // 쿠키 개수 수정
+
             }
 
             return kakaoPayVo.getStatus();
@@ -207,6 +219,15 @@ public class KakaoPay {
      * */
     private void cancelCookieHst(CookieHstDto cookieHstDto) {
         cookieHstService.cancelCookieHst(cookieHstDto);
+    }
+
+    private void updateCancelCookie(CookieHstDto cookieHstDto) {
+        CookieDto cookieDto = cookieHstDto.getCookie();
+        Long updateCookieCount = cookieDto.getCookieCount() - cookieHstDto.getQuantity().longValue();
+        cookieDto.setCookieCount(updateCookieCount);
+        cookieDto.setModifyDt(LocalDateTime.now());
+        Cookie cookie = mapper.map(cookieDto, Cookie.class);
+        cookieRepository.save(cookie);
     }
 
 
