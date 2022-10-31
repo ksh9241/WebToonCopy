@@ -12,10 +12,9 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import project.toy.webtoon_copy.cookie.Cookie;
-import project.toy.webtoon_copy.cookie.CookieDto;
+import project.toy.webtoon_copy.cookie.CookieRequestDto;
 import project.toy.webtoon_copy.cookie.CookieRepository;
-import project.toy.webtoon_copy.cookie.CookieService;
-import project.toy.webtoon_copy.cookiehst.CookieHstDto;
+import project.toy.webtoon_copy.cookiehst.CookieHstRequestDto;
 import project.toy.webtoon_copy.cookiehst.CookieHstService;
 import project.toy.webtoon_copy.cookiehst.PaymentCode;
 import project.toy.webtoon_copy.util.CheckUtils;
@@ -122,7 +121,7 @@ public class KakaoPay {
         try {
             kakaoPayApprovalVo = restTemplate.postForObject(new URI(HOST + "/v1/payment/approve"), body, KakaoPayApprovalVo.class);
             if (successPayment()) {
-                createCookieHst(new CookieHstDto());
+                createCookieHst(new CookieHstRequestDto());
             }
 
             return kakaoPayDto;
@@ -140,7 +139,7 @@ public class KakaoPay {
     }
 
     // 결제, 결제취소에 대한 메서드로 변경해야 됨.
-    private void createCookieHst(CookieHstDto cookieHstDto) {
+    private void createCookieHst(CookieHstRequestDto cookieHstDto) {
         // 결제 시 필수값 설정
         if (CheckUtils.isEmpty(cookieHstDto.getPaymentSttusCd())) {
             cookieHstDto = findCookieInCookieDto(cookieHstDto, kakaoPayDto.getCookieSeq());
@@ -161,7 +160,7 @@ public class KakaoPay {
     }
 
     // 이 부분 cookieHst 처리 후 호출해서 카카오 페이 결제 취소만 하면 되는데 역할에 대한 침범이니까 이 부분 교체
-    public String kakaoPayCancel(CookieHstDto cookieHstDto) { // Cid, Tid, Amount
+    public String kakaoPayCancel(CookieHstRequestDto cookieHstDto) { // Cid, Tid, Amount
         RestTemplate restTemplate = new RestTemplate();
 
         cookieHstDto = findCookieInCookieDto(cookieHstDto, cookieHstDto.getCookie().getCookieSeq());
@@ -209,25 +208,25 @@ public class KakaoPay {
         return "/pay";
     }
 
-    private CookieHstDto findCookieInCookieDto(CookieHstDto cookieHstDto, Long cookieSeq) {
+    private CookieHstRequestDto findCookieInCookieDto(CookieHstRequestDto cookieHstDto, Long cookieSeq) {
         Cookie cookie = cookieRepository.findByCookieSeq(cookieSeq);
-        cookieHstDto.setCookie(mapper.map(cookie, CookieDto.class));
+        cookieHstDto.setCookie(mapper.map(cookie, CookieRequestDto.class));
         return cookieHstDto;
     }
 
-    private boolean cancelCookieCountCheck(CookieHstDto cookieHstDto) {
+    private boolean cancelCookieCountCheck(CookieHstRequestDto cookieHstDto) {
         return cookieHstDto.getQuantity() > cookieHstDto.getCookie().getCookieCount();
     }
 
     /**
      * @Description 결제 취소 시 기존 쿠키 이력 만료
      * */
-    private void cancelCookieHst(CookieHstDto cookieHstDto) {
+    private void cancelCookieHst(CookieHstRequestDto cookieHstDto) {
         cookieHstService.cancelCookieHst(cookieHstDto);
     }
 
-    private void updateCancelCookie(CookieHstDto cookieHstDto) {
-        CookieDto cookieDto = cookieHstDto.getCookie();
+    private void updateCancelCookie(CookieHstRequestDto cookieHstDto) {
+        CookieRequestDto cookieDto = cookieHstDto.getCookie();
         Long updateCookieCount = cookieDto.getCookieCount() - cookieHstDto.getQuantity().longValue();
         cookieDto.setCookieCount(updateCookieCount);
         cookieDto.setModifyDt(LocalDateTime.now());

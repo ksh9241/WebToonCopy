@@ -4,7 +4,7 @@ import com.google.gson.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
-import project.toy.webtoon_copy.comments.CommentDto;
+import project.toy.webtoon_copy.comments.CommentResponseDto;
 
 import java.lang.reflect.Type;
 import java.time.LocalDateTime;
@@ -34,7 +34,7 @@ public class KafkaProducer {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    public void sendMessage(CommentDto commentDto) {
+    public void sendMessage(CommentResponseDto commentDto) {
         gson = initSerializerGson();
         String message = gson.toJson(commentDto);
 

@@ -3,10 +3,10 @@ package project.toy.webtoon_copy.cookiehst;
 import java.util.List;
 
 public interface CookieHstService {
-    List<CookieHstDto> findAllbyCookieSeq(Long cookieSeq);
-    CookieHstDto createCookieHst(CookieHstDto cookieHstDto);
+    List<CookieHstRequestDto> findAllbyCookieSeq(Long cookieSeq);
+    CookieHstRequestDto createCookieHst(CookieHstRequestDto cookieHstDto);
 
-    CookieHstDto findByCookieHstSeq(Long cookieHstSeq);
+    CookieHstRequestDto findByCookieHstSeq(Long cookieHstSeq);
 
-    CookieHstDto cancelCookieHst(CookieHstDto cookieHstDto);
+    CookieHstRequestDto cancelCookieHst(CookieHstRequestDto cookieHstDto);
 }

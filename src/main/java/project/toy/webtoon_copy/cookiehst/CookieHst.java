@@ -5,6 +5,7 @@ import com.sun.istack.NotNull;
 import lombok.*;
 import project.toy.webtoon_copy.cookie.Cookie;
 import project.toy.webtoon_copy.user.User;
+import project.toy.webtoon_copy.util.Common;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -12,25 +13,18 @@ import java.time.LocalDateTime;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
-public class CookieHst {
+@Builder
+public class CookieHst extends Common {
 
-    // 공통 부분 따로 엔티티 만들어서 상속받기
-    // createDt, modifyDt, efctStDt, efctFnsDt
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long cookieHstSeq;
+
+//    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    Long cookieHstSeq;
     @NotNull @Enumerated(EnumType.STRING)
     PaymentCode paymentStatusCd; // CookieHstType
     Integer amount;
     Integer quantity;
     @NotNull
-    LocalDateTime createDt;
-    LocalDateTime modifyDt;
-    @NotNull
-    LocalDateTime efctStDt;
-    @NotNull
-    LocalDateTime efctFnsDt;
+
     String tid;
     String cid;
 

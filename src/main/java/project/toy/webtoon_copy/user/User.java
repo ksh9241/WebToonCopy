@@ -10,6 +10,7 @@ import org.hibernate.annotations.GenerationTime;
 import project.toy.webtoon_copy.comments.Comment;
 import project.toy.webtoon_copy.cookie.Cookie;
 import project.toy.webtoon_copy.likewebtoon.LikeWebtoon;
+import project.toy.webtoon_copy.util.Common;
 import project.toy.webtoon_copy.util.Role;
 
 import javax.persistence.*;
@@ -18,11 +19,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity(name = "users")
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+@Builder
+public class User extends Common {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY) @Column(name = "USER_SEQ")
     Long userSeq;
@@ -36,15 +36,23 @@ public class User {
     String phoneNum;
     @NotNull @Enumerated(EnumType.STRING)
     Role role;
-    @NotNull
-    LocalDateTime createDt;
-    LocalDateTime modifyDt;
 
     @OneToMany(mappedBy = "user")
     private List<Comment> comments = new ArrayList<>();
 
     @OneToOne
     private Cookie cookie;
+
+    public UserResponseDto toDto() {
+        return UserResponseDto.builder()
+                .userSeq(userSeq)
+                .userId(userId)
+                .userPwd(userPwd)
+                .userName(userName)
+                .phoneNum(phoneNum)
+                .role(role)
+                .build();
+    }
 
 //    @OneToMany(mappedBy = "user")
 //    private List<LikeWebtoon> likeWebtoons = new ArrayList<>();

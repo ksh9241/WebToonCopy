@@ -8,6 +8,7 @@ import org.hibernate.annotations.DynamicInsert;
 import project.toy.webtoon_copy.cookiehst.CookieHst;
 import project.toy.webtoon_copy.subcomments.SubComments;
 import project.toy.webtoon_copy.user.User;
+import project.toy.webtoon_copy.util.Common;
 import project.toy.webtoon_copy.webtoon.Webtoon;
 
 import javax.persistence.*;
@@ -19,9 +20,10 @@ import java.util.Objects;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Getter
 @Setter
-public class Comment {
+public class Comment extends Common {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long commentSeq;
@@ -31,9 +33,6 @@ public class Comment {
     Long likeCount;
     @ColumnDefault("0")
     Long notLikeCount;
-    @NotNull
-    LocalDateTime createDt;
-    LocalDateTime modifyDt;
     @ColumnDefault("'N'")
     String deleteYn;
 
@@ -49,4 +48,15 @@ public class Comment {
 
     @OneToMany(mappedBy = "comment")
     private List<SubComments> subComments = new ArrayList<>();
+
+    public CommentResponseDto toDto() {
+        return CommentResponseDto.builder()
+                .commentSeq(commentSeq)
+                .description(description)
+                .likeCount(likeCount)
+                .notLikeCount(notLikeCount)
+                .userResponseDto(user.toDto())
+                .webtoonResponseDto(webtoon.toDto())
+                .build();
+    }
 }

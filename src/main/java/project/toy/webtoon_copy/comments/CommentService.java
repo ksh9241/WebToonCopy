@@ -1,8 +1,8 @@
 package project.toy.webtoon_copy.comments;
 
 public interface CommentService {
-    CommentDto createComment(CommentDto commentDto);
-    CommentDto afterCreateComment(CommentDto commentDto);
+    CommentResponseDto createComment(Comment comment);
+    CommentResponseDto afterCreateComment(Comment comment);
 
-    CommentDto deleteComment(CommentDto commentDto);
+    CommentResponseDto deleteComment(Comment comment);
 }

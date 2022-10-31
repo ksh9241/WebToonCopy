@@ -1,18 +1,13 @@
 package project.toy.webtoon_copy.cookie;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import project.toy.webtoon_copy.cookiehst.CookieHstDto;
-import project.toy.webtoon_copy.kakaopay.KakaoPay;
-import project.toy.webtoon_copy.kakaopay.KakaoPayApprovalVo;
 import project.toy.webtoon_copy.kakaopay.KakaoPayDto;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -30,9 +25,9 @@ public class CookieController {
     }
 
     @GetMapping("/kakaopay-success") // RestFul URL 규칙
-    public Map<String, CookieDto> kakaoPaySuccess(@RequestParam("pg_token") String pg_token, Model model) {
-        CookieDto result = cookieService.kakaoPaySuccess(pg_token);
-        Map<String, CookieDto> resultMap = new HashMap<>();
+    public Map<String, CookieRequestDto> kakaoPaySuccess(@RequestParam("pg_token") String pg_token, Model model) {
+        CookieRequestDto result = cookieService.kakaoPaySuccess(pg_token);
+        Map<String, CookieRequestDto> resultMap = new HashMap<>();
         resultMap.put("res", result);
         return resultMap;
     }

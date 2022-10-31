@@ -1,11 +1,10 @@
 package project.toy.webtoon_copy.comment;
 
-import org.hamcrest.Matcher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import project.toy.webtoon_copy.comments.CommentDto;
+import project.toy.webtoon_copy.comments.CommentResponseDto;
 import project.toy.webtoon_copy.comments.CommentService;
 
 import java.time.LocalDateTime;
@@ -21,11 +20,11 @@ public class CommentServiceTest {
     @Autowired
     CommentService commentService;
 
-    private CommentDto commentDto;
+    private CommentResponseDto commentDto;
 
     @BeforeEach
     void setUp() {
-        commentDto = new CommentDto(1L, "test", 0L, 0L, LocalDateTime.now(), null, "N", null, null);
+        commentDto = new CommentResponseDto(1L, "test", 0L, 0L, LocalDateTime.now(), null, "N", null, null);
     }
 
     @Test

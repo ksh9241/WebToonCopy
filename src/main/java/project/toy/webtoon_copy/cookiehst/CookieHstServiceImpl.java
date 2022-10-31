@@ -4,8 +4,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import project.toy.webtoon_copy.cookie.Cookie;
-import project.toy.webtoon_copy.user.User;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,33 +18,33 @@ public class CookieHstServiceImpl implements CookieHstService{
     ModelMapper mapper;
 
     @Override
-    public List<CookieHstDto> findAllbyCookieSeq(Long cookieSeq) {
+    public List<CookieHstRequestDto> findAllbyCookieSeq(Long cookieSeq) {
         List<CookieHst> cookieHst = cookieHstRepository.findAllByCookieSeq(cookieSeq);
 
-        List<CookieHstDto> resultList = cookieHst.stream().map(entity -> mapper.map(entity, CookieHstDto.class)).collect(Collectors.toList());
+        List<CookieHstRequestDto> resultList = cookieHst.stream().map(entity -> mapper.map(entity, CookieHstRequestDto.class)).collect(Collectors.toList());
         return resultList;
 //        return null;
     }
 
     @Override
-    public CookieHstDto createCookieHst(CookieHstDto cookieHstDto) {
+    public CookieHstRequestDto createCookieHst(CookieHstRequestDto cookieHstDto) {
         CookieHst cookieHst = mapper.map(cookieHstDto, CookieHst.class);
         CookieHst resultCookieHst = cookieHstRepository.save(cookieHst);
-        CookieHstDto resultDto = mapper.map(resultCookieHst, CookieHstDto.class);
+        CookieHstRequestDto resultDto = mapper.map(resultCookieHst, CookieHstRequestDto.class);
 
         return resultDto;
     }
 
     @Override
     @Transactional(readOnly = true)
-    public CookieHstDto findByCookieHstSeq(Long cookieHstSeq) {
+    public CookieHstRequestDto findByCookieHstSeq(Long cookieHstSeq) {
         CookieHst cookieHst = cookieHstRepository.findByCookieHstSeq(cookieHstSeq);
-        CookieHstDto resCookieHstDto = mapper.map(cookieHst, CookieHstDto.class);
+        CookieHstRequestDto resCookieHstDto = mapper.map(cookieHst, CookieHstRequestDto.class);
         return resCookieHstDto;
     }
 
     @Override
-    public CookieHstDto cancelCookieHst(CookieHstDto cookieHstDto) {
+    public CookieHstRequestDto cancelCookieHst(CookieHstRequestDto cookieHstDto) {
         cookieHstDto.setEfctFnsDt(LocalDateTime.now());
         cookieHstDto.setModifyDt(LocalDateTime.now());
         CookieHst cookieHst = mapper.map(cookieHstDto, CookieHst.class);

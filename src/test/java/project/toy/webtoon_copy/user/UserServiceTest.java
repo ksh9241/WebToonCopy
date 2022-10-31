@@ -13,10 +13,10 @@ public class UserServiceTest {
     @Autowired
     UserRepository userRepository;
 
-    UserDto userDto;
+    UserRequestDto userDto;
     @BeforeEach
     void setup() {
-        userDto = new UserDto();
+        userDto = new UserRequestDto();
         userDto.setUserId("id");
         userDto.setUserPwd("pwd");
         userDto.setUserName("name");

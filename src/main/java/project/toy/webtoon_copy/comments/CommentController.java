@@ -14,13 +14,13 @@ public class CommentController {
     CommentService commentService;
 
     @PostMapping("/createComment")
-    public String createComment(CommentDto commentDto) {
-        CommentDto resultDto = commentService.createComment(commentDto);
+    public String createComment(CommentRequestDto commentRequestDto) {
+        CommentResponseDto resultDto = commentService.createComment(commentRequestDto.toEntity());
         return null;
     }
 
     @PutMapping("/deleteComment")
-    public String deleteComment(CommentDto commentDto) {
+    public String deleteComment(CommentResponseDto commentDto) {
         commentService.deleteComment(commentDto);
         return null;
     }

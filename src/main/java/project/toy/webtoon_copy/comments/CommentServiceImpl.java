@@ -9,6 +9,7 @@ import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 
 @Service
+@Transactional
 public class CommentServiceImpl implements CommentService{
     @Autowired
     CommentRepository commentRepository;
@@ -20,33 +21,31 @@ public class CommentServiceImpl implements CommentService{
     KafkaProducer kafkaProducer;
 
     @Override
-    public CommentDto createComment(CommentDto commentDto) {
-        commentDto.checkUser();
+    public CommentResponseDto createComment(Comment comment) {
+        comment.checkUser();
 
         kafkaProducer.sendMessage(commentDto);
 
-        return commentDto;
+        return comment.toDto();
     }
 
     @Override
     @Transactional
-    public CommentDto afterCreateComment(CommentDto commentDto) {
-        Comment comment = mapper.map(commentDto, Comment.class);
-        Comment resComment = commentRepository.save(comment);
+    public CommentResponseDto afterCreateComment(Comment comment) {
+        commentRepository.save(comment);
 //        commentRepository.getReferenceById() // proxy 객체를 생성 (유저아이디만 넘겨서 프록시 객체를 생성함.)
-        CommentDto resultDto = mapper.map(resComment, CommentDto.class);
-        return resultDto;
+        return comment.toDto();
     }
 
     @Override
-    public CommentDto deleteComment(CommentDto commentDto) {
+    public CommentResponseDto deleteComment(Comment comment) {
         kafkaProducer.sendMessage(setRequiredDeleteVal(commentDto));
-        return commentDto;
+        return comment.toDto();
     }
 
-    private CommentDto setRequiredDeleteVal (CommentDto commentDto) {
-        commentDto.setDeleteYn("Y");
-        commentDto.setModifyDt(LocalDateTime.now());
-        return commentDto;
+    private CommentResponseDto setRequiredDeleteVal (Comment comment) {
+        comment.setDeleteYn("Y");
+        comment.setModifyDt(LocalDateTime.now());
+        return comment.toDto();
     }
 }

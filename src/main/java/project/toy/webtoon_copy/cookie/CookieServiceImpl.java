@@ -4,21 +4,18 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import project.toy.webtoon_copy.cookiehst.CookieHst;
-import project.toy.webtoon_copy.cookiehst.CookieHstDto;
+import project.toy.webtoon_copy.cookiehst.CookieHstRequestDto;
 import project.toy.webtoon_copy.cookiehst.CookieHstService;
 import project.toy.webtoon_copy.cookiehst.PaymentCode;
 import project.toy.webtoon_copy.kakaopay.KakaoPay;
-import project.toy.webtoon_copy.kakaopay.KakaoPayApprovalVo;
 import project.toy.webtoon_copy.kakaopay.KakaoPayDto;
 import project.toy.webtoon_copy.user.User;
-import project.toy.webtoon_copy.user.UserDto;
+import project.toy.webtoon_copy.user.UserRequestDto;
 import project.toy.webtoon_copy.user.UserRepository;
 import project.toy.webtoon_copy.util.CheckUtils;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Service
@@ -40,8 +37,8 @@ public class CookieServiceImpl implements CookieService{
     CookieHstService cookieHstService;
 
     @Override
-    public Cookie createCookie(UserDto userDto) {
-        CookieDto cookieDto = new CookieDto();
+    public Cookie createCookie(UserRequestDto userDto) {
+        CookieRequestDto cookieDto = new CookieRequestDto();
         cookieDto.setUser(userDto);
         Cookie cookie = mapper.map(cookieDto, Cookie.class);
         cookieRepository.save(cookie);
@@ -58,7 +55,7 @@ public class CookieServiceImpl implements CookieService{
 
     @Override
     @Transactional
-    public CookieDto kakaoPaySuccess(String pg_token) {
+    public CookieRequestDto kakaoPaySuccess(String pg_token) {
         KakaoPayDto kakaoPayDto = kakaoPay.kakaoPayInfo(pg_token);
         return paymentAfter(kakaoPayDto);
     }
@@ -87,7 +84,7 @@ public class CookieServiceImpl implements CookieService{
     @Override
 //    public String kakaoPayCancel(Long cookieHstSeq) {
     public String cancelCookieHst(Long cookieHstSeq) {
-        CookieHstDto cookieHstDto = cookieHstService.findByCookieHstSeq(cookieHstSeq);
+        CookieHstRequestDto cookieHstDto = cookieHstService.findByCookieHstSeq(cookieHstSeq);
         return kakaoPay.kakaoPayCancel(cookieHstDto);
     }
 
@@ -109,10 +106,10 @@ public class CookieServiceImpl implements CookieService{
         return result;
     }
 
-    private CookieHstDto initCookieHstDto(Cookie cookie, String cookieValue) {
-        CookieDto cookieDto = mapper.map(cookie, CookieDto.class);
+    private CookieHstRequestDto initCookieHstDto(Cookie cookie, String cookieValue) {
+        CookieRequestDto cookieDto = mapper.map(cookie, CookieRequestDto.class);
 
-        CookieHstDto cookieHstDto = new CookieHstDto();
+        CookieHstRequestDto cookieHstDto = new CookieHstRequestDto();
         cookieHstDto.setCookie(cookieDto);
         cookieHstDto.setQuantity(Integer.parseInt(cookieValue));
         cookieHstDto.setPaymentSttusCd(PaymentCode.S);
@@ -124,7 +121,7 @@ public class CookieServiceImpl implements CookieService{
 //        return cookieRepository.findByCookieSeq(cookieSeq);
 //    }
 
-    private CookieDto paymentAfter(KakaoPayDto KakaoPayDto) {
+    private CookieRequestDto paymentAfter(KakaoPayDto KakaoPayDto) {
         Cookie findCookie = cookieRepository.findByCookieSeq(KakaoPayDto.getCookieSeq());
 
         Long calcCookieCount = calcCookieCount(findCookie.getCookieCount(), KakaoPayDto.getQuantity());
@@ -132,7 +129,7 @@ public class CookieServiceImpl implements CookieService{
         findCookie.setModifyDt(LocalDateTime.now());
         cookieRepository.save(findCookie);
 
-        CookieDto resultDto = mapper.map(findCookie, CookieDto.class);
+        CookieRequestDto resultDto = mapper.map(findCookie, CookieRequestDto.class);
         return resultDto;
     }
 
