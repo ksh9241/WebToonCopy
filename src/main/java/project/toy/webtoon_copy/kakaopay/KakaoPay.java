@@ -46,6 +46,9 @@ public class KakaoPay {
     private KakaoPayApprovalVo kakaoPayApprovalVo;
     private KakaoPayDto kakaoPayDto;
 
+    // 싱글톤으로 사용해도 문제 없음.
+    private RestTemplate restTemplate = new RestTemplate();
+
     // 생성자 주입에 대한 부분 복습
     @Autowired
     private CookieHstService cookieHstService;
@@ -57,13 +60,13 @@ public class KakaoPay {
     ModelMapper mapper;
 
     public String kakaoPayReady(KakaoPayDto kakaoPayDto) {
-        RestTemplate restTemplate = new RestTemplate();
-
-        // 서버로 요청할 Header
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "KakaoAK " + adminKey);
-        headers.add("Accept", MediaType.APPLICATION_JSON_VALUE);
-        headers.add("Content-Type", MediaType.APPLICATION_FORM_URLENCODED_VALUE + ";charset=UTF-8");
+//        RestTemplate restTemplate = new RestTemplate();
+//
+//        // 서버로 요청할 Header
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.add("Authorization", "KakaoAK " + adminKey);
+//        headers.add("Accept", MediaType.APPLICATION_JSON_VALUE);
+//        headers.add("Content-Type", MediaType.APPLICATION_FORM_URLENCODED_VALUE + ";charset=UTF-8");
 
         kakaoPayDto.valueSetUp(cid, approvalUrl, cancelUrl, failUrl);
         this.kakaoPayDto = kakaoPayDto;
@@ -81,7 +84,7 @@ public class KakaoPay {
         params.add("cancel_url",kakaoPayDto.getCancelUrl());
         params.add("fail_url",kakaoPayDto.getFailUrl());
 
-        HttpEntity<MultiValueMap<String, String>> body = new HttpEntity<>(params, headers);
+        HttpEntity<MultiValueMap<String, String>> body = initRestTemplate(params);
 
         try {
             /**
@@ -101,12 +104,12 @@ public class KakaoPay {
     }
 
     public KakaoPayDto kakaoPayInfo(String pg_token) {
-        RestTemplate restTemplate = new RestTemplate();
-        // 서버로 요청할 Header
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "KakaoAK " + adminKey);
-        headers.add("Accept", MediaType.APPLICATION_JSON_VALUE);
-        headers.add("Content-Type", MediaType.APPLICATION_FORM_URLENCODED_VALUE + ";charset=UTF-8");
+//        RestTemplate restTemplate = new RestTemplate();
+//        // 서버로 요청할 Header
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.add("Authorization", "KakaoAK " + adminKey);
+//        headers.add("Accept", MediaType.APPLICATION_JSON_VALUE);
+//        headers.add("Content-Type", MediaType.APPLICATION_FORM_URLENCODED_VALUE + ";charset=UTF-8");
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("cid", kakaoPayDto.getCid());
@@ -116,7 +119,7 @@ public class KakaoPay {
         params.add("pg_token", pg_token);
         params.add("total_amount", kakaoPayDto.getTotalAmount());
 
-        HttpEntity<MultiValueMap<String, String>> body = new HttpEntity<MultiValueMap<String, String>>(params, headers);
+        HttpEntity<MultiValueMap<String, String>> body = initRestTemplate(params);
 
         try {
             kakaoPayApprovalVo = restTemplate.postForObject(new URI(HOST + "/v1/payment/approve"), body, KakaoPayApprovalVo.class);
@@ -162,18 +165,18 @@ public class KakaoPay {
 
     // 이 부분 cookieHst 처리 후 호출해서 카카오 페이 결제 취소만 하면 되는데 역할에 대한 침범이니까 이 부분 교체
     public void kakaoPayCancel(String cid, String tid, int amount) { // Cid, Tid, Amount
-        RestTemplate restTemplate = new RestTemplate();
+//        RestTemplate restTemplate = new RestTemplate();
 
-        cookieHstDto = findCookieInCookieDto(cookieHstDto, cookieHstDto.getCookie().getCookieSeq());
-        if (cancelCookieCountCheck(cookieHstDto)) { // 이 부분도 CookieHst 도메인에서 처리
-            return "쿠키 개수가 부족합니다.";
-        }
+//        cookieHstDto = findCookieInCookieDto(cookieHstDto, cookieHstDto.getCookie().getCookieSeq());
+//        if (cancelCookieCountCheck(cookieHstDto)) { // 이 부분도 CookieHst 도메인에서 처리
+//            return "쿠키 개수가 부족합니다.";
+//        }
 
         // 서버로 요청할 Header
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "KakaoAK " + adminKey);
-        headers.add("Accept", MediaType.APPLICATION_JSON_VALUE);
-        headers.add("Content-Type", MediaType.APPLICATION_FORM_URLENCODED_VALUE + ";charset=UTF-8");
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.add("Authorization", "KakaoAK " + adminKey);
+//        headers.add("Accept", MediaType.APPLICATION_JSON_VALUE);
+//        headers.add("Content-Type", MediaType.APPLICATION_FORM_URLENCODED_VALUE + ";charset=UTF-8");
 
         String cancelAmount = String.valueOf(amount);
         // 서버로 요청할 Body
@@ -183,7 +186,7 @@ public class KakaoPay {
         params.add("cancel_amount",cancelAmount);
         params.add("cancel_tax_free_amount",cancelAmount.substring(0, cancelAmount.length() - 1));
 
-        HttpEntity<MultiValueMap<String, String>> body = new HttpEntity<>(params, headers);
+        HttpEntity<MultiValueMap<String, String>> body = initRestTemplate(params);
 
         try {
             /**
@@ -192,13 +195,6 @@ public class KakaoPay {
             kakaoPayVo = restTemplate
                     .postForObject(new URI(HOST + "/v1/payment/cancel"), body, KakaoPayVo.class);
 
-            if ("CANCEL_PAYMENT".equals(kakaoPayVo.getStatus())) {
-                // 이 부분도 빼고 에러 시 예외반환 해서 트랜잭션 롤백처리만
-//                cancelCookieHst(cookieHstDto);  // 충전 이력 만료
-//                createCookieHst(cookieHstDto);  // 취소 이력 생성
-//                updateCancelCookie(cookieHstDto);   // 쿠키 개수 수정
-            }
-
         } catch (RestClientException e) {
             e.printStackTrace();
         } catch (URISyntaxException e) {
@@ -206,15 +202,15 @@ public class KakaoPay {
         }
     }
 
-    private CookieHstRequestDto findCookieInCookieDto(CookieHstRequestDto cookieHstDto, Long cookieSeq) {
-        Cookie cookie = cookieRepository.findByCookieSeq(cookieSeq);
-        cookieHstDto.setCookie(mapper.map(cookie, CookieRequestDto.class));
-        return cookieHstDto;
-    }
-
-    private boolean cancelCookieCountCheck(CookieHstRequestDto cookieHstDto) {
-        return cookieHstDto.getQuantity() > cookieHstDto.getCookie().getCookieCount();
-    }
+//    private CookieHstRequestDto findCookieInCookieDto(CookieHstRequestDto cookieHstDto, Long cookieSeq) {
+//        Cookie cookie = cookieRepository.findByCookieSeq(cookieSeq);
+//        cookieHstDto.setCookie(mapper.map(cookie, CookieRequestDto.class));
+//        return cookieHstDto;
+//    }
+//
+//    private boolean cancelCookieCountCheck(CookieHstRequestDto cookieHstDto) {
+//        return cookieHstDto.getQuantity() > cookieHstDto.getCookie().getCookieCount();
+//    }
 
     /**
      * @Description 결제 취소 시 기존 쿠키 이력 만료
@@ -232,6 +228,15 @@ public class KakaoPay {
         cookieRepository.save(cookie);
     }
 
+    private HttpEntity<MultiValueMap<String, String>> initRestTemplate(MultiValueMap<String, String> params) {
+        // 서버로 요청할 Header
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "KakaoAK " + adminKey);
+        headers.add("Accept", MediaType.APPLICATION_JSON_VALUE);
+        headers.add("Content-Type", MediaType.APPLICATION_FORM_URLENCODED_VALUE + ";charset=UTF-8");
+
+        return new HttpEntity<MultiValueMap<String, String>>(params, headers);
+    }
 
 
 }

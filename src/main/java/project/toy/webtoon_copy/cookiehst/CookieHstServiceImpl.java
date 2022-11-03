@@ -15,41 +15,40 @@ public class CookieHstServiceImpl implements CookieHstService{
     @Autowired
     CookieHstRepository cookieHstRepository;
 
-    @Autowired
-    ModelMapper mapper;
-
     @Override
-    public List<CookieHstRequestDto> findAllbyCookieSeq(Long cookieSeq) {
+    @Transactional(readOnly = true)
+    /**
+     * @Description 쿠키 시퀀스로 모든 이력 가져오기
+     * */
+    public List<CookieHstResponseDto> findAllbyCookieSeq(Long cookieSeq) {
         List<CookieHst> cookieHst = cookieHstRepository.findAllByCookieSeq(cookieSeq);
 
-        List<CookieHstRequestDto> resultList = cookieHst.stream().map(entity -> mapper.map(entity, CookieHstRequestDto.class)).collect(Collectors.toList());
-        return resultList;
-//        return null;
+        return cookieHst.stream().map(entity -> entity.toDto()).collect(Collectors.toList());
     }
 
     @Override
-    public CookieHstRequestDto createCookieHst(CookieHstRequestDto cookieHstDto) {
-        CookieHst cookieHst = mapper.map(cookieHstDto, CookieHst.class);
-        CookieHst resultCookieHst = cookieHstRepository.save(cookieHst);
-        CookieHstRequestDto resultDto = mapper.map(resultCookieHst, CookieHstRequestDto.class);
-
-        return resultDto;
-    }
-
-    @Override
-    public CookieHstResponseDto cancelCookieHst(Long cookieHstSeq) {
-        CookieHst cookieHst = cookieHstRepository.findByCookieHstSeq(cookieHstSeq);
-        cookieHst.setEfctFnsAt();
-
-        return resCookieHstDto;
-    }
-
-    @Override
-    public CookieHstRequestDto cancelCookieHst(CookieHstRequestDto cookieHstDto) {
-        cookieHstDto.setEfctFnsAt(LocalDateTime.now());
-        cookieHstDto.setModifyAt(LocalDateTime.now());
-        CookieHst cookieHst = mapper.map(cookieHstDto, CookieHst.class);
+    /**
+     * @Description 쿠키 이력 생성
+     * */
+    public CookieHstResponseDto createCookieHst(CookieHst cookieHst) {
         cookieHstRepository.save(cookieHst);
-        return null;
+        return cookieHst.toDto();
+    }
+
+    @Override
+    /**
+     * @Description 쿠키이력시퀀스로 이력 조회 후 결제이력 만료 및 취소이력 생성
+     * */
+    public CookieHst cancelCookieHst(Long cookieHstSeq) {
+        // 결제 이력 만료
+        CookieHst cookieHst = cookieHstRepository.findByCookieHstSeq(cookieHstSeq);
+        cookieHst.setEfctFnsAt(LocalDateTime.now());
+        cookieHstRepository.save(cookieHst);
+
+        // 취소이력 생성
+        CookieHst cancelCookieHst = new CookieHst().copyCookieHst(cookieHst);
+        cancelCookieHst.setPaymentStatusCd(PaymentCode.CANCEL);
+
+        return cookieHst;
     }
 }

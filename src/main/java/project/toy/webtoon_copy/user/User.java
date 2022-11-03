@@ -61,6 +61,14 @@ public class User extends Common {
         return CheckUtils.isEmpty(userId);
     }
 
+    // DTO 객체 필수값 체크
+//    public boolean validation() {
+//        if (CheckUtils.isEmpty(userId) || CheckUtils.isEmpty(userPwd) || CheckUtils.isEmpty(userName) || CheckUtils.isEmpty(phoneNum)) {
+//            return true;
+//        }
+//        return false;
+//    }
+
 //    @OneToMany(mappedBy = "user")
 //    private List<LikeWebtoon> likeWebtoons = new ArrayList<>();
 

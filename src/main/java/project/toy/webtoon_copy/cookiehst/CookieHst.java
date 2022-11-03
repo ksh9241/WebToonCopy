@@ -19,8 +19,8 @@ import java.time.LocalDateTime;
 public class CookieHst extends Common {
 
 
-//    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    Long cookieHstSeq;
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long cookieHstSeq;
     @NotNull @Enumerated(EnumType.STRING)
     PaymentCode paymentStatusCd; // CookieHstType
     Integer amount;
@@ -35,4 +35,24 @@ public class CookieHst extends Common {
 //    @JoinColumn(name = "cookieSeq")
     private Cookie cookie;
 
+    public CookieHstResponseDto toDto() {
+        return CookieHstResponseDto.builder()
+                .cookieHstSeq(cookieHstSeq)
+                .paymentStatusCd(paymentStatusCd)
+                .amount(amount)
+                .quantity(quantity)
+                .tid(tid)
+                .cid(cid)
+                .build();
+    }
+
+    public CookieHst copyCookieHst(CookieHst cookieHst) {
+        paymentStatusCd = cookieHst.getPaymentStatusCd();
+        amount = cookieHst.getAmount();
+        quantity = cookieHst.getQuantity();
+        tid = cookieHst.getTid();
+        cid = cookieHst.getCid();
+        cookie = cookieHst.getCookie();
+        return this;
+    }
 }

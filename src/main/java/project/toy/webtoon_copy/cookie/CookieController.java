@@ -25,11 +25,9 @@ public class CookieController {
     }
 
     @GetMapping("/kakaopay-success") // RestFul URL 규칙
-    public Map<String, CookieRequestDto> kakaoPaySuccess(@RequestParam("pg_token") String pg_token, Model model) {
-        CookieRequestDto result = cookieService.kakaoPaySuccess(pg_token);
-        Map<String, CookieRequestDto> resultMap = new HashMap<>();
-        resultMap.put("res", result);
-        return resultMap;
+    public String kakaoPaySuccess(@RequestParam("pg_token") String pg_token, Model model) {
+        cookieService.kakaoPaySuccess(pg_token);
+        return "성공적으로 결제가 완료되었습니다.";
     }
 
     @PostMapping("/kakaopay-cancel")

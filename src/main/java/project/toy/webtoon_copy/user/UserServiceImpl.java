@@ -8,7 +8,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import project.toy.webtoon_copy.cookie.CookieRequestDto;
+import project.toy.webtoon_copy.cookie.CookieResponseDto;
 import project.toy.webtoon_copy.cookie.CookieService;
+
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -27,29 +30,27 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
-        User userEntity = userRepository.findByUserId(userId);
-        if (userEntity == null) {
-            throw new UsernameNotFoundException(userId + ": not found");
-        }
+        Optional<User> userOptional = userRepository.findByUserId(userId);
+        User userEntity = userOptional.orElseThrow(() -> new UsernameNotFoundException(userId + " Not Found"));
+
         return new org.springframework.security.core.userdetails.User
                 (userEntity.getUserId(), userEntity.getUserPwd(), AuthorityUtils.createAuthorityList(userEntity.getRole().value()));
     }
 
-    public UserRequestDto createUser(UserRequestDto userDto) {
-        if (userDto.validation()) {
-            throw new UsernameNotFoundException("필수값 없음");
-        }
+    public UserResponseDto createUser(User user) {
+        // 필수값 체크
+//        if (userDto.validation()) {
+//            throw new UsernameNotFoundException("필수값 없음");
+//        }
+//        user.vaildation();
 
         // 유저 회원가입
-        User user = mapper.map(userDto, User.class);
-        user.setUserPwd(bCryptPasswordEncoder.encode(userDto.getUserPwd()));
+        user.setUserPwd(bCryptPasswordEncoder.encode(user.getUserPwd()));
         userRepository.save(user);
-        UserRequestDto resUserDto = mapper.map(user, UserRequestDto.class);
 
         // 유저 별 쿠키 오브젝트 생성
-        CookieRequestDto cookieDto = cookieService.createCookie(resUserDto);
-        resUserDto.setCookie(cookieDto);
+        CookieResponseDto cookieDto = cookieService.createCookie(user);
 
-        return resUserDto;
+        return user.toDto();
     }
 }

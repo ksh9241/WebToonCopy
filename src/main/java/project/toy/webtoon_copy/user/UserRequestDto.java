@@ -36,12 +36,4 @@ public class UserRequestDto {
                 .cookie(cookieDto.toEntity())
                 .build();
     }
-
-    // DTO 객체 필수값 체크
-//    public boolean validation() {
-//        if (CheckUtils.isEmpty(userId) || CheckUtils.isEmpty(userPwd) || CheckUtils.isEmpty(userName) || CheckUtils.isEmpty(phoneNum)) {
-//            return true;
-//        }
-//        return false;
-//    }
 }

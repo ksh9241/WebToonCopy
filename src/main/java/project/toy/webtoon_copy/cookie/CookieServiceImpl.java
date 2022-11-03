@@ -5,20 +5,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import project.toy.webtoon_copy.cookiehst.CookieHstRequestDto;
-import project.toy.webtoon_copy.cookiehst.CookieHstResponseDto;
-import project.toy.webtoon_copy.cookiehst.CookieHstService;
-import project.toy.webtoon_copy.cookiehst.PaymentCode;
+import project.toy.webtoon_copy.cookiehst.*;
 import project.toy.webtoon_copy.kakaopay.KakaoPay;
 import project.toy.webtoon_copy.kakaopay.KakaoPayDto;
 import project.toy.webtoon_copy.user.User;
-import project.toy.webtoon_copy.user.UserRequestDto;
 import project.toy.webtoon_copy.user.UserRepository;
 import project.toy.webtoon_copy.util.CheckUtils;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -55,9 +49,20 @@ public class CookieServiceImpl implements CookieService{
     }
 
     @Override
-    public CookieRequestDto kakaoPaySuccess(String pg_token) {
+    /**
+     * @Description 카카오 페이 결제 성공 처리 및 쿠키 개수 증가
+     * */
+    public void kakaoPaySuccess(String pg_token) {
         KakaoPayDto kakaoPayDto = kakaoPay.kakaoPayInfo(pg_token);
-        return paymentAfter(kakaoPayDto);
+        buyCookie(kakaoPayDto.getCookieSeq(), Integer.parseInt(kakaoPayDto.getQuantity()));
+    }
+
+    /**쿠키 구입 시 쿠키 값 변경*/
+    private void buyCookie(Long cookieSeq, int cookieCount) {
+        Cookie findCookie = cookieRepository.findByCookieSeq(cookieSeq);
+        findCookie.buyCookie(cookieCount);
+
+        cookieRepository.save(findCookie);
     }
 
     @Override
@@ -71,71 +76,38 @@ public class CookieServiceImpl implements CookieService{
         User user = findUser.orElseThrow(() -> new UsernameNotFoundException("유저 정보가 없습니다."));  // 잘못된 유저 정보일 경우
 
         // 쿠키 개수 체크
-        user.getCookie().useCookie(cookieValue);
+        user.getCookie().updateCookie(cookieValue);
         userRepository.save(user);
     }
 
-    // 여기서는 결제취소부르고 따로 쿠키 개수차감 및 쿠키이력생성 서비스 호출
+    // 결제 취소 시발점이 쿠키 오브젝트가 맞나??
     @Override
-//    public String kakaoPayCancel(Long cookieHstSeq) {
+    /**
+     * @Description 결제취소 부르고 쿠키 개수차감 및 쿠키이력 변경
+     * */
     public void cancelCookieHst(Long cookieHstSeq) {
-        CookieHstResponseDto cookieHstResponseDto = cookieHstService.cancelCookieHst(cookieHstSeq);
+        // 쿠키 이력 만료 및 취소 이력 생성
+        CookieHst cookieHst = cookieHstService.cancelCookieHst(cookieHstSeq);
 
-        String cid = cookieHstResponseDto.getCid();
-        String tid = cookieHstResponseDto.getTid();
-        int amount = cookieHstResponseDto.getAmount();
+        // 쿠키 개수 취소 처리
+        cancelCookie(cookieHst.getCookie(), cookieHst.getQuantity());
+
+        // 카카오페이 결제 취소
+        String cid = cookieHst.getCid();
+        String tid = cookieHst.getTid();
+        int amount = cookieHst.getAmount();
         kakaoPay.kakaoPayCancel(cid, tid, amount);
-
-        return null;
     }
 
     //
-    private boolean updateCookieCount(Cookie cookie, String cookieValue) {
-        boolean result = true;
+    private void cancelCookie(Cookie cookie, int cookieValue) {
 
-        if (CheckUtils.isEmpty(cookie.getCookieCount()) || cookie.getCookieCount() < Integer.parseInt(cookieValue)) {
-            return false;
-        }
-
-        Long afterCookieCount = cookie.getCookieCount() - Integer.parseInt(cookieValue);
-        cookie.setCookieCount(afterCookieCount);
-        cookie.setModifyAt(LocalDateTime.now());
-        Cookie resultCookie = cookieRepository.save(cookie);
-
-        cookieHstService.createCookieHst(initCookieHstDto(resultCookie, cookieValue));
-
-        return result;
-    }
-
-    private CookieHstRequestDto initCookieHstDto(Cookie cookie, String cookieValue) {
-        CookieRequestDto cookieDto = mapper.map(cookie, CookieRequestDto.class);
-
-        CookieHstRequestDto cookieHstDto = new CookieHstRequestDto();
-        cookieHstDto.setCookie(cookieDto);
-        cookieHstDto.setQuantity(Integer.parseInt(cookieValue));
-        cookieHstDto.setPaymentSttusCd(PaymentCode.S);
-        return cookieHstDto;
+        cookie.updateCookie(cookieValue);
+        cookieRepository.save(cookie);
     }
 
 //    @Override
 //    public Cookie findByCookieSeq(Long cookieSeq) {
 //        return cookieRepository.findByCookieSeq(cookieSeq);
 //    }
-
-    private CookieRequestDto paymentAfter(KakaoPayDto KakaoPayDto) {
-        Cookie findCookie = cookieRepository.findByCookieSeq(KakaoPayDto.getCookieSeq());
-
-        Long calcCookieCount = calcCookieCount(findCookie.getCookieCount(), KakaoPayDto.getQuantity());
-        findCookie.setCookieCount(calcCookieCount);
-        findCookie.setModifyDt(LocalDateTime.now());
-        cookieRepository.save(findCookie);
-
-        CookieRequestDto resultDto = mapper.map(findCookie, CookieRequestDto.class);
-        return resultDto;
-    }
-
-    private Long calcCookieCount(Long leftVal, String rightVal) {
-        if (CheckUtils.isEmpty(leftVal) || leftVal == 0) leftVal = 0L; // 근본적으로 JPA 디폴트 값이 0으로 들어가게 수정해야됨.
-        return leftVal + Long.parseLong(rightVal);
-    }
 }

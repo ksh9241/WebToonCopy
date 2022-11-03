@@ -12,7 +12,7 @@ public interface CookieService {
 
     String paymentToCookie(KakaoPayDto kakaoPayDto);
 
-    CookieRequestDto kakaoPaySuccess(String pg_token);
+    void kakaoPaySuccess(String pg_token);
 
     void use(Long userSeq, int cookieValue);
 
