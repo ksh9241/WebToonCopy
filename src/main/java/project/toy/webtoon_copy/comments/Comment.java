@@ -5,9 +5,11 @@ import com.sun.istack.NotNull;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import project.toy.webtoon_copy.cookiehst.CookieHst;
 import project.toy.webtoon_copy.subcomments.SubComments;
 import project.toy.webtoon_copy.user.User;
+import project.toy.webtoon_copy.util.CheckUtils;
 import project.toy.webtoon_copy.util.Common;
 import project.toy.webtoon_copy.webtoon.Webtoon;
 
@@ -58,5 +60,11 @@ public class Comment extends Common {
                 .userResponseDto(user.toDto())
                 .webtoonResponseDto(webtoon.toDto())
                 .build();
+    }
+
+    public void checkUser() {
+        if(user.checkNotLogin()) {
+            throw new UsernameNotFoundException("유저만 댓글을 입력할 수 있습니다.");
+        }
     }
 }

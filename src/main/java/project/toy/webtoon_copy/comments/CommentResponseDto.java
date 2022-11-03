@@ -22,11 +22,4 @@ public class CommentResponseDto {
     UserResponseDto userResponseDto;
     WebtoonResponseDto webtoonResponseDto;
 
-
-//    public Exception checkUser() {
-//        if(CheckUtils.isEmpty(this.userDto.getUserSeq())) {
-//            throw new UsernameNotFoundException("유저만 댓글을 입력할 수 있습니다.");
-//        }
-//        return null;
-//    }
 }

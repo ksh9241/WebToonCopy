@@ -1,6 +1,5 @@
 package project.toy.webtoon_copy.comments;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import project.toy.webtoon_copy.kafka.KafkaProducer;
@@ -15,16 +14,13 @@ public class CommentServiceImpl implements CommentService{
     CommentRepository commentRepository;
 
     @Autowired
-    ModelMapper mapper;
-
-    @Autowired
     KafkaProducer kafkaProducer;
 
     @Override
     public CommentResponseDto createComment(Comment comment) {
         comment.checkUser();
 
-        kafkaProducer.sendMessage(commentDto);
+        kafkaProducer.sendMessage(comment);
 
         return comment.toDto();
     }
@@ -39,13 +35,13 @@ public class CommentServiceImpl implements CommentService{
 
     @Override
     public CommentResponseDto deleteComment(Comment comment) {
-        kafkaProducer.sendMessage(setRequiredDeleteVal(commentDto));
+        kafkaProducer.sendMessage(setRequiredDeleteVal(comment));
         return comment.toDto();
     }
 
-    private CommentResponseDto setRequiredDeleteVal (Comment comment) {
+    private Comment setRequiredDeleteVal (Comment comment) {
         comment.setDeleteYn("Y");
-        comment.setModifyDt(LocalDateTime.now());
-        return comment.toDto();
+        comment.setModifyAt(LocalDateTime.now());
+        return comment;
     }
 }

@@ -10,6 +10,7 @@ import org.hibernate.annotations.GenerationTime;
 import project.toy.webtoon_copy.comments.Comment;
 import project.toy.webtoon_copy.cookie.Cookie;
 import project.toy.webtoon_copy.likewebtoon.LikeWebtoon;
+import project.toy.webtoon_copy.util.CheckUtils;
 import project.toy.webtoon_copy.util.Common;
 import project.toy.webtoon_copy.util.Role;
 
@@ -22,6 +23,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Getter
+@Setter
 public class User extends Common {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY) @Column(name = "USER_SEQ")
@@ -52,6 +55,10 @@ public class User extends Common {
                 .phoneNum(phoneNum)
                 .role(role)
                 .build();
+    }
+
+    public boolean checkNotLogin() {
+        return CheckUtils.isEmpty(userId);
     }
 
 //    @OneToMany(mappedBy = "user")

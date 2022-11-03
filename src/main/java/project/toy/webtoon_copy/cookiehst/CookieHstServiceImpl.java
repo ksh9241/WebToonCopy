@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class CookieHstServiceImpl implements CookieHstService{
     @Autowired
     CookieHstRepository cookieHstRepository;
@@ -36,17 +37,17 @@ public class CookieHstServiceImpl implements CookieHstService{
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public CookieHstRequestDto findByCookieHstSeq(Long cookieHstSeq) {
+    public CookieHstResponseDto cancelCookieHst(Long cookieHstSeq) {
         CookieHst cookieHst = cookieHstRepository.findByCookieHstSeq(cookieHstSeq);
-        CookieHstRequestDto resCookieHstDto = mapper.map(cookieHst, CookieHstRequestDto.class);
+        cookieHst.setEfctFnsAt();
+
         return resCookieHstDto;
     }
 
     @Override
     public CookieHstRequestDto cancelCookieHst(CookieHstRequestDto cookieHstDto) {
-        cookieHstDto.setEfctFnsDt(LocalDateTime.now());
-        cookieHstDto.setModifyDt(LocalDateTime.now());
+        cookieHstDto.setEfctFnsAt(LocalDateTime.now());
+        cookieHstDto.setModifyAt(LocalDateTime.now());
         CookieHst cookieHst = mapper.map(cookieHstDto, CookieHst.class);
         cookieHstRepository.save(cookieHst);
         return null;

@@ -120,8 +120,9 @@ public class KakaoPay {
 
         try {
             kakaoPayApprovalVo = restTemplate.postForObject(new URI(HOST + "/v1/payment/approve"), body, KakaoPayApprovalVo.class);
-            if (successPayment()) {
-                createCookieHst(new CookieHstRequestDto());
+            if (notSuccessPayment()) {
+//                createCookieHst(new CookieHstRequestDto());  // 책임에 대한 문제가 있음
+                throw new IllegalStateException();
             }
 
             return kakaoPayDto;
@@ -134,33 +135,33 @@ public class KakaoPay {
         return null;
     }
 
-    private boolean successPayment() {
-        return !CheckUtils.isEmpty(kakaoPayApprovalVo.getAid());
+    private boolean notSuccessPayment() {
+        return CheckUtils.isEmpty(kakaoPayApprovalVo.getAid());
     }
 
     // 결제, 결제취소에 대한 메서드로 변경해야 됨.
-    private void createCookieHst(CookieHstRequestDto cookieHstDto) {
-        // 결제 시 필수값 설정
-        if (CheckUtils.isEmpty(cookieHstDto.getPaymentSttusCd())) {
-            cookieHstDto = findCookieInCookieDto(cookieHstDto, kakaoPayDto.getCookieSeq());
-            cookieHstDto.setPaymentSttusCd(PaymentCode.A);
-            cookieHstDto.setAmount(kakaoPayApprovalVo.getAmount().getTotal());
-            cookieHstDto.setQuantity(kakaoPayApprovalVo.getQuantity());
-            cookieHstDto.setTid(kakaoPayVo.getTid());
-            cookieHstDto.setCid(kakaoPayApprovalVo.getCid());
-        } else {
-            cookieHstDto.setCookieHstSeq(null);
-            cookieHstDto.setCreateDt(LocalDateTime.now());
-            cookieHstDto.setEfctFnsDt(LocalDateTime.of(9999, 12, 31, 23, 59, 59));
-            cookieHstDto.setPaymentSttusCd(PaymentCode.C);
-            cookieHstDto.setTid(kakaoPayVo.getTid());
-        }
-
-        cookieHstService.createCookieHst(cookieHstDto);
-    }
+//    private void createCookieHst(CookieHstRequestDto cookieHstDto) {
+//        // 결제 시 필수값 설정
+//        if (CheckUtils.isEmpty(cookieHstDto.getPaymentSttusCd())) {
+//            cookieHstDto = findCookieInCookieDto(cookieHstDto, kakaoPayDto.getCookieSeq());
+//            cookieHstDto.setPaymentSttusCd(PaymentCode.A);
+//            cookieHstDto.setAmount(kakaoPayApprovalVo.getAmount().getTotal());
+//            cookieHstDto.setQuantity(kakaoPayApprovalVo.getQuantity());
+//            cookieHstDto.setTid(kakaoPayVo.getTid());
+//            cookieHstDto.setCid(kakaoPayApprovalVo.getCid());
+//        } else {
+//            cookieHstDto.setCookieHstSeq(null);
+//            cookieHstDto.setCreateDt(LocalDateTime.now());
+//            cookieHstDto.setEfctFnsDt(LocalDateTime.of(9999, 12, 31, 23, 59, 59));
+//            cookieHstDto.setPaymentSttusCd(PaymentCode.C);
+//            cookieHstDto.setTid(kakaoPayVo.getTid());
+//        }
+//
+//        cookieHstService.createCookieHst(cookieHstDto);
+//    }
 
     // 이 부분 cookieHst 처리 후 호출해서 카카오 페이 결제 취소만 하면 되는데 역할에 대한 침범이니까 이 부분 교체
-    public String kakaoPayCancel(CookieHstRequestDto cookieHstDto) { // Cid, Tid, Amount
+    public void kakaoPayCancel(String cid, String tid, int amount) { // Cid, Tid, Amount
         RestTemplate restTemplate = new RestTemplate();
 
         cookieHstDto = findCookieInCookieDto(cookieHstDto, cookieHstDto.getCookie().getCookieSeq());
@@ -174,11 +175,11 @@ public class KakaoPay {
         headers.add("Accept", MediaType.APPLICATION_JSON_VALUE);
         headers.add("Content-Type", MediaType.APPLICATION_FORM_URLENCODED_VALUE + ";charset=UTF-8");
 
-        String cancelAmount = String.valueOf(cookieHstDto.getAmount());
+        String cancelAmount = String.valueOf(amount);
         // 서버로 요청할 Body
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("cid", cookieHstDto.getCid());
-        params.add("tid",cookieHstDto.getTid());
+        params.add("cid", cid);
+        params.add("tid",tid);
         params.add("cancel_amount",cancelAmount);
         params.add("cancel_tax_free_amount",cancelAmount.substring(0, cancelAmount.length() - 1));
 
@@ -198,14 +199,11 @@ public class KakaoPay {
 //                updateCancelCookie(cookieHstDto);   // 쿠키 개수 수정
             }
 
-            return kakaoPayVo.getStatus();
         } catch (RestClientException e) {
             e.printStackTrace();
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
-
-        return "/pay";
     }
 
     private CookieHstRequestDto findCookieInCookieDto(CookieHstRequestDto cookieHstDto, Long cookieSeq) {

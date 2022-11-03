@@ -2,9 +2,11 @@ package project.toy.webtoon_copy.cookie;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.toy.webtoon_copy.cookiehst.CookieHstRequestDto;
+import project.toy.webtoon_copy.cookiehst.CookieHstResponseDto;
 import project.toy.webtoon_copy.cookiehst.CookieHstService;
 import project.toy.webtoon_copy.cookiehst.PaymentCode;
 import project.toy.webtoon_copy.kakaopay.KakaoPay;
@@ -17,8 +19,10 @@ import project.toy.webtoon_copy.util.CheckUtils;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
+@Transactional
 public class CookieServiceImpl implements CookieService{
 
     @Autowired
@@ -37,15 +41,12 @@ public class CookieServiceImpl implements CookieService{
     CookieHstService cookieHstService;
 
     @Override
-    public Cookie createCookie(UserRequestDto userDto) {
-        CookieRequestDto cookieDto = new CookieRequestDto();
-        cookieDto.setUser(userDto);
-        Cookie cookie = mapper.map(cookieDto, Cookie.class);
+    public CookieResponseDto createCookie(User user) {
+        Cookie cookie = new Cookie();
+        cookie.setUser(user);
         cookieRepository.save(cookie);
 
-//        CookieDto resCookieDto = mapper.map(cookie, CookieDto.class);
-
-        return cookie;
+        return cookie.toDto();
     }
 
     @Override
@@ -54,7 +55,6 @@ public class CookieServiceImpl implements CookieService{
     }
 
     @Override
-    @Transactional
     public CookieRequestDto kakaoPaySuccess(String pg_token) {
         KakaoPayDto kakaoPayDto = kakaoPay.kakaoPayInfo(pg_token);
         return paymentAfter(kakaoPayDto);
@@ -62,30 +62,31 @@ public class CookieServiceImpl implements CookieService{
 
     @Override
     @Transactional
-//    public Map<String, String> useCookie(Long userSeq, String cookieValue) {
-        public void useCookie(Long userSeq, String cookieValue) { // if 조건에 대한 부분들은 예외로 던지고 아무 예외 없을 시 성공
-        Map<String, String> resultMap = new HashMap<>();
+    /**
+     * @Descripton 쿠키를 사용합니다.
+     * */
+    public void use(Long userSeq, int cookieValue) {
 
-        User user = userRepository.findByUserSeq(userSeq); // Optional로 바꾸기
-        // if 조건 다 지우고 상태 체크는 엔티티에서 직접 처리하고 예외 아닐 시 status 200 던짐
-//        if (!CheckUtils.isEmptyByObject(user)) {
-            //Cookie cookie = cookieRepository.findByCookieSeq(user.getCookie().getCookieSeq());
-//            if (updateCookieCount(cookie, cookieValue)) { // 이 부분 CookieEntity에서 메서드로 처리
-//                resultMap.put("msg", "성공적으로 결제가 완료되었습니다.");
-//            } else {
-//                resultMap.put("msg", "잔액이 부족합니다.");
-//            }
-//        } else {
-//            resultMap.put("msg", "유저 정보가 없습니다.");
-//        }
-//        return resultMap;
+        Optional<User> findUser = userRepository.findByUserSeq(userSeq);
+        User user = findUser.orElseThrow(() -> new UsernameNotFoundException("유저 정보가 없습니다."));  // 잘못된 유저 정보일 경우
+
+        // 쿠키 개수 체크
+        user.getCookie().useCookie(cookieValue);
+        userRepository.save(user);
     }
 
+    // 여기서는 결제취소부르고 따로 쿠키 개수차감 및 쿠키이력생성 서비스 호출
     @Override
 //    public String kakaoPayCancel(Long cookieHstSeq) {
-    public String cancelCookieHst(Long cookieHstSeq) {
-        CookieHstRequestDto cookieHstDto = cookieHstService.findByCookieHstSeq(cookieHstSeq);
-        return kakaoPay.kakaoPayCancel(cookieHstDto);
+    public void cancelCookieHst(Long cookieHstSeq) {
+        CookieHstResponseDto cookieHstResponseDto = cookieHstService.cancelCookieHst(cookieHstSeq);
+
+        String cid = cookieHstResponseDto.getCid();
+        String tid = cookieHstResponseDto.getTid();
+        int amount = cookieHstResponseDto.getAmount();
+        kakaoPay.kakaoPayCancel(cid, tid, amount);
+
+        return null;
     }
 
     //
@@ -98,7 +99,7 @@ public class CookieServiceImpl implements CookieService{
 
         Long afterCookieCount = cookie.getCookieCount() - Integer.parseInt(cookieValue);
         cookie.setCookieCount(afterCookieCount);
-        cookie.setModifyDt(LocalDateTime.now());
+        cookie.setModifyAt(LocalDateTime.now());
         Cookie resultCookie = cookieRepository.save(cookie);
 
         cookieHstService.createCookieHst(initCookieHstDto(resultCookie, cookieValue));

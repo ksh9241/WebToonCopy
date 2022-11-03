@@ -4,6 +4,7 @@ import com.google.gson.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
+import project.toy.webtoon_copy.comments.Comment;
 import project.toy.webtoon_copy.comments.CommentResponseDto;
 import project.toy.webtoon_copy.comments.CommentService;
 
@@ -35,8 +36,8 @@ public class KafkaConsumer {
     @KafkaListener(topics = "example", groupId = "foo")
     public void consumer(String message) throws IOException {
         gson = initDeserializerGson();
-        CommentResponseDto commentDto = gson.fromJson(message, CommentResponseDto.class);
+        Comment comment = gson.fromJson(message, Comment.class);
 
-        commentService.afterCreateComment(commentDto);
+        commentService.afterCreateComment(comment);
     }
 }

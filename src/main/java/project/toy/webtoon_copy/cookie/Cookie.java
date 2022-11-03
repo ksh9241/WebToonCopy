@@ -18,10 +18,12 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Getter
+@Setter
 public class Cookie extends Common {
 
-//    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private Long cookieSeq;
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long cookieSeq;
     @Column(columnDefinition = "bigint(20) default '0'") // default 값 설정하는 거 처리해야 함.
     private Long cookieCount;
 
@@ -34,10 +36,16 @@ public class Cookie extends Common {
     // 자체적인 오브젝트 내에서 처리하는 로직을 수행한다.
     public void useCookie(int count) {
         if (cookieCount < count) {
-            throw new IllegalStateException();
+            throw new IllegalStateException("잔액이 부족합니다.");
         }
-
         cookieCount -= count;
     }
 
+    public CookieResponseDto toDto() {
+        return CookieResponseDto.builder()
+                .cookieSeq(cookieSeq)
+                .cookieCount(cookieCount)
+                .userResponseDto(user.toDto())
+                .build();
+    }
 }

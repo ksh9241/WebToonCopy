@@ -34,13 +34,13 @@ public class CookieController {
 
     @PostMapping("/kakaopay-cancel")
     public String kakaoPayCancel(@RequestParam("cookieHstSeq") Long cookieHstSeq) {
-        String resultCode = cookieService.kakaoPayCancel(cookieHstSeq);
-        return resultCode;
+        cookieService.cancelCookieHst(cookieHstSeq);
+        return "결제 취소가 완료되었습니다.";
     }
 
     @PutMapping("/use")
-    public Map<String, String> use(@RequestParam("userSeq") Long userSeq, @RequestParam("cookieValue") String cookieValue) {
-        Map<String, String> resultMap = cookieService.use(userSeq, cookieValue);    // 명칭변경
-        return resultMap;
+    public String use(@RequestParam("userSeq") Long userSeq, @RequestParam("cookieValue") int cookieValue) {
+        cookieService.use(userSeq, cookieValue);    // 명칭변경
+        return "성공적으로 결제가 완료되었습니다.";
     }
 }

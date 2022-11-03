@@ -42,4 +42,16 @@ public class Webtoon {
 //    @JoinColumn(name = "likeWebtoonSeq")
 //    LikeWebtoon likeWebtoon;
 
+    public WebtoonResponseDto toDto() {
+        return WebtoonResponseDto.builder()
+                .webtoonSeq(webtoonSeq)
+                .webtoonName(webtoonName)
+                .artist(artist)
+                .dayOfWeek(dayOfWeek)
+                .grade(grade)
+                .fileName(fileName)
+                .originFileName(originFileName)
+                .build();
+    }
+
 }

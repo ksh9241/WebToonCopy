@@ -20,8 +20,8 @@ public class CommentController {
     }
 
     @PutMapping("/deleteComment")
-    public String deleteComment(CommentResponseDto commentDto) {
-        commentService.deleteComment(commentDto);
+    public String deleteComment(CommentRequestDto commentRequestDto) {
+        commentService.deleteComment(commentRequestDto.toEntity());
         return null;
     }
 }

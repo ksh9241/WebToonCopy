@@ -6,7 +6,7 @@ public interface CookieHstService {
     List<CookieHstRequestDto> findAllbyCookieSeq(Long cookieSeq);
     CookieHstRequestDto createCookieHst(CookieHstRequestDto cookieHstDto);
 
-    CookieHstRequestDto findByCookieHstSeq(Long cookieHstSeq);
+    CookieHstResponseDto cancelCookieHst(Long cookieHstSeq);
 
     CookieHstRequestDto cancelCookieHst(CookieHstRequestDto cookieHstDto);
 }
