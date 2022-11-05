@@ -33,10 +33,11 @@ public class KafkaConsumer {
         }).create();
     }
 
-    @KafkaListener(topics = "example", groupId = "foo")
+    @KafkaListener(topics = "example2", groupId = "foo")
     public void consumer(String message) throws IOException {
         gson = initDeserializerGson();
         Comment comment = gson.fromJson(message, Comment.class);
+        System.out.println("consumer Comment == " + comment);
 
         commentService.afterCreateComment(comment);
     }

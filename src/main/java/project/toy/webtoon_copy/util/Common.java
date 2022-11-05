@@ -23,5 +23,5 @@ public class Common {
     LocalDateTime modifyAt;
     @CreationTimestamp
     LocalDateTime efctStAt;
-    LocalDateTime efctFnsAt  = LocalDateTime.of(9999,12,31,23,99,99);
+    LocalDateTime efctFnsAt  = LocalDateTime.of(9999,12,31,23,59,59);
 }

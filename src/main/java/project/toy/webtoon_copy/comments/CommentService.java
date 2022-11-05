@@ -5,5 +5,7 @@ public interface CommentService {
 
     CommentResponseDto afterCreateComment(Comment comment);
 
-    CommentResponseDto deleteComment(Comment comment);
+    CommentResponseDto deleteComment(Long commentSeq);
+
+    Comment findByCommentSeq(Long commentSeq);
 }

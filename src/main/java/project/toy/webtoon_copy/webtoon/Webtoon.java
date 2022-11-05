@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import project.toy.webtoon_copy.comments.Comment;
 import project.toy.webtoon_copy.likewebtoon.LikeWebtoon;
+import project.toy.webtoon_copy.util.Common;
 import project.toy.webtoon_copy.util.DayOfWeek;
 
 import javax.persistence.*;
@@ -16,7 +17,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Webtoon {
+@ToString
+public class Webtoon extends Common {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY) @Column(name = "WEBTOON_SEQ")
     Long webtoonSeq;
@@ -28,9 +30,6 @@ public class Webtoon {
     DayOfWeek dayOfWeek;
     @ColumnDefault("0")
     Float grade; // 평점
-    @NotNull
-    LocalDateTime createDt;
-    LocalDateTime modifyDt;
 
     String fileName;
     String originFileName;

@@ -7,7 +7,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import project.toy.webtoon_copy.cookie.CookieRequestDto;
 import project.toy.webtoon_copy.cookie.CookieResponseDto;
 import project.toy.webtoon_copy.cookie.CookieService;
 
@@ -38,19 +37,12 @@ public class UserServiceImpl implements UserService {
     }
 
     public UserResponseDto createUser(User user) {
-        // 필수값 체크
-//        if (userDto.validation()) {
-//            throw new UsernameNotFoundException("필수값 없음");
-//        }
-//        user.vaildation();
-
         // 유저 회원가입
         user.setUserPwd(bCryptPasswordEncoder.encode(user.getUserPwd()));
         userRepository.save(user);
 
         // 유저 별 쿠키 오브젝트 생성
         CookieResponseDto cookieDto = cookieService.createCookie(user);
-
         return user.toDto();
     }
 }

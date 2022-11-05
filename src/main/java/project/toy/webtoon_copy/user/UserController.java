@@ -14,10 +14,8 @@ public class UserController {
     UserService userService;
 
     @PostMapping("/signup")
-    public Map<String, UserRequestDto> createUser(@ModelAttribute UserRequestDto userDto) {
-        UserRequestDto resUserDto = userService.createUser(userDto);
-        Map<String, UserRequestDto> map = new HashMap<>();
-        map.put("user", resUserDto);
-        return map;
+    public String createUser(@ModelAttribute UserRequestDto userDto) {
+        userService.createUser(userDto.toEntity());
+        return "회원가입이 완료되었습니다.";
     }
 }

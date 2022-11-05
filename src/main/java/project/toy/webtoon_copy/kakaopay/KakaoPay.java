@@ -124,7 +124,6 @@ public class KakaoPay {
         try {
             kakaoPayApprovalVo = restTemplate.postForObject(new URI(HOST + "/v1/payment/approve"), body, KakaoPayApprovalVo.class);
             if (notSuccessPayment()) {
-//                createCookieHst(new CookieHstRequestDto());  // 책임에 대한 문제가 있음
                 throw new IllegalStateException();
             }
 
@@ -215,18 +214,18 @@ public class KakaoPay {
     /**
      * @Description 결제 취소 시 기존 쿠키 이력 만료
      * */
-    private void cancelCookieHst(CookieHstRequestDto cookieHstDto) {
-        cookieHstService.cancelCookieHst(cookieHstDto);
-    }
+//    private void cancelCookieHst(CookieHstRequestDto cookieHstDto) {
+//        cookieHstService.cancelCookieHst(cookieHstDto);
+//    }
 
-    private void updateCancelCookie(CookieHstRequestDto cookieHstDto) {
-        CookieRequestDto cookieDto = cookieHstDto.getCookie();
-        Long updateCookieCount = cookieDto.getCookieCount() - cookieHstDto.getQuantity().longValue();
-        cookieDto.setCookieCount(updateCookieCount);
-        cookieDto.setModifyDt(LocalDateTime.now());
-        Cookie cookie = mapper.map(cookieDto, Cookie.class);
-        cookieRepository.save(cookie);
-    }
+//    private void updateCancelCookie(CookieHstRequestDto cookieHstDto) {
+//        CookieRequestDto cookieDto = cookieHstDto.getCookie();
+//        Long updateCookieCount = cookieDto.getCookieCount() - cookieHstDto.getQuantity().longValue();
+//        cookieDto.setCookieCount(updateCookieCount);
+//        cookieDto.setModifyDt(LocalDateTime.now());
+//        Cookie cookie = mapper.map(cookieDto, Cookie.class);
+//        cookieRepository.save(cookie);
+//    }
 
     private HttpEntity<MultiValueMap<String, String>> initRestTemplate(MultiValueMap<String, String> params) {
         // 서버로 요청할 Header

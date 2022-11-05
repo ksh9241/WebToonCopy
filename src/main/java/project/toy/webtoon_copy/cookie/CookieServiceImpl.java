@@ -36,7 +36,9 @@ public class CookieServiceImpl implements CookieService{
 
     @Override
     public CookieResponseDto createCookie(User user) {
-        Cookie cookie = new Cookie();
+//        Cookie cookie = new Cookie();
+//        cookie.setUser(user);
+        Cookie cookie = user.getCookie();
         cookie.setUser(user);
         cookieRepository.save(cookie);
 
@@ -50,7 +52,7 @@ public class CookieServiceImpl implements CookieService{
 
     @Override
     /**
-     * @Description 카카오 페이 결제 성공 처리 및 쿠키 개수 증가
+     * @Description 카카오 페이 결제 성공 처리 및 쿠키 개수 증가 및 결제 이력 생성
      * */
     public void kakaoPaySuccess(String pg_token) {
         KakaoPayDto kakaoPayDto = kakaoPay.kakaoPayInfo(pg_token);

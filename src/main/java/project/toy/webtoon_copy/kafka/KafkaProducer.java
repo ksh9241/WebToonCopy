@@ -14,7 +14,7 @@ import java.time.format.DateTimeFormatter;
 @Service
 public class KafkaProducer {
 
-    private static final String TOPIC = "example";
+    private static final String TOPIC = "example2";
     private final KafkaTemplate<String, String> kafkaTemplate;
     private Gson gson;
 

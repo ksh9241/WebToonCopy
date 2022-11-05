@@ -5,13 +5,17 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import static org.assertj.core.api.Assertions.assertThat;
+import org.springframework.transaction.annotation.Transactional;
+import project.toy.webtoon_copy.util.Role;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@Transactional
 public class UserServiceTest {
 
     @Autowired
-    UserRepository userRepository;
+    UserService userService;
 
     UserRequestDto userDto;
     @BeforeEach
@@ -21,18 +25,12 @@ public class UserServiceTest {
         userDto.setUserPwd("pwd");
         userDto.setUserName("name");
         userDto.setPhoneNum("01012341234");
-
+        userDto.setRole(Role.ROLE_USER);
     }
 
     @Test
-    void validationToDto_성공() {
-        assertThat(userDto.validation()).isEqualTo(false);
+    void 회원가입테스트() {
+        UserResponseDto userResponseDto = userService.createUser(userDto.toEntity());
+        assertNotNull(userResponseDto);
     }
-
-    @Test
-    @Disabled
-    void validationToDto_실패() {
-        assertThat(userDto.validation()).isEqualTo(true);
-    }
-
 }

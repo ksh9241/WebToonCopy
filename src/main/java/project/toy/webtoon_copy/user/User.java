@@ -43,7 +43,7 @@ public class User extends Common {
     @OneToMany(mappedBy = "user")
     private List<Comment> comments = new ArrayList<>();
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)    // TransientPropertyValueException 예외 FK로 쓰는 객체가 저장이 안되어있을 때
     private Cookie cookie;
 
     public UserResponseDto toDto() {
@@ -60,14 +60,6 @@ public class User extends Common {
     public boolean checkNotLogin() {
         return CheckUtils.isEmpty(userId);
     }
-
-    // DTO 객체 필수값 체크
-//    public boolean validation() {
-//        if (CheckUtils.isEmpty(userId) || CheckUtils.isEmpty(userPwd) || CheckUtils.isEmpty(userName) || CheckUtils.isEmpty(phoneNum)) {
-//            return true;
-//        }
-//        return false;
-//    }
 
 //    @OneToMany(mappedBy = "user")
 //    private List<LikeWebtoon> likeWebtoons = new ArrayList<>();

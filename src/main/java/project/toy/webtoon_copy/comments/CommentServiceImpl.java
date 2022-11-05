@@ -34,9 +34,14 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public CommentResponseDto deleteComment(Comment comment) {
+    public CommentResponseDto deleteComment(Long commentSeq) {
+        Comment comment = findByCommentSeq(commentSeq);
         kafkaProducer.sendMessage(setRequiredDeleteVal(comment));
         return comment.toDto();
+    }
+
+    public Comment findByCommentSeq(Long commentSeq) {
+        return commentRepository.findByCommentSeq(commentSeq);
     }
 
     private Comment setRequiredDeleteVal (Comment comment) {

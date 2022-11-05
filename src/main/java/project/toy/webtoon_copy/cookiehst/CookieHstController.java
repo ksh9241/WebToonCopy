@@ -15,9 +15,9 @@ public class CookieHstController {
     CookieHstService cookieHstService;
 
     @GetMapping
-    public Map<String, List<CookieHstRequestDto>> findAllCookieHst (Long cookieSeq) {
-        List<CookieHstRequestDto> cookieHst = cookieHstService.findAllbyCookieSeq(cookieSeq);
-        Map<String, List<CookieHstRequestDto>> resultMap = new HashMap<>();
+    public Map<String, List<CookieHstResponseDto>> findAllCookieHst (Long cookieSeq) {
+        List<CookieHstResponseDto> cookieHst = cookieHstService.findAllbyCookieSeq(cookieSeq);
+        Map<String, List<CookieHstResponseDto>> resultMap = new HashMap<>();
         resultMap.put("list", cookieHst);
         return resultMap;
     }
