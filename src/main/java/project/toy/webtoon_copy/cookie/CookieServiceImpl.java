@@ -57,6 +57,26 @@ public class CookieServiceImpl implements CookieService{
     public void kakaoPaySuccess(String pg_token) {
         KakaoPayDto kakaoPayDto = kakaoPay.kakaoPayInfo(pg_token);
         buyCookie(kakaoPayDto.getCookieSeq(), Integer.parseInt(kakaoPayDto.getQuantity()));
+//        cookieHstService.createCookieHst();
+//    private void createCookieHst(CookieHstRequestDto cookieHstDto) {
+//        // 결제 시 필수값 설정
+//        if (CheckUtils.isEmpty(cookieHstDto.getPaymentSttusCd())) {
+//            cookieHstDto = findCookieInCookieDto(cookieHstDto, kakaoPayDto.getCookieSeq());
+//            cookieHstDto.setPaymentSttusCd(PaymentCode.A);
+//            cookieHstDto.setAmount(kakaoPayApprovalVo.getAmount().getTotal());
+//            cookieHstDto.setQuantity(kakaoPayApprovalVo.getQuantity());
+//            cookieHstDto.setTid(kakaoPayVo.getTid());
+//            cookieHstDto.setCid(kakaoPayApprovalVo.getCid());
+//        } else {
+//            cookieHstDto.setCookieHstSeq(null);
+//            cookieHstDto.setCreateDt(LocalDateTime.now());
+//            cookieHstDto.setEfctFnsDt(LocalDateTime.of(9999, 12, 31, 23, 59, 59));
+//            cookieHstDto.setPaymentSttusCd(PaymentCode.C);
+//            cookieHstDto.setTid(kakaoPayVo.getTid());
+//        }
+//
+//        cookieHstService.createCookieHst(cookieHstDto);
+//    }
     }
 
     /**쿠키 구입 시 쿠키 값 변경*/

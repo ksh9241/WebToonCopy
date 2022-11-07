@@ -1,5 +1,6 @@
 package project.toy.webtoon_copy.webtoon;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.sun.istack.NotNull;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -18,6 +19,8 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @ToString
+@Getter
+@Setter
 public class Webtoon extends Common {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY) @Column(name = "WEBTOON_SEQ")
@@ -34,7 +37,8 @@ public class Webtoon extends Common {
     String fileName;
     String originFileName;
 
-    @OneToMany(mappedBy = "webtoon")
+    @OneToMany(mappedBy = "webtoon", fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<Comment> comments = new ArrayList<>();
 
 //    @ManyToOne(fetch = FetchType.LAZY)

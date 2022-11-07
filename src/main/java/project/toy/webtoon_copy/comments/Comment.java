@@ -1,5 +1,6 @@
 package project.toy.webtoon_copy.comments;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
 import lombok.*;
@@ -43,7 +44,7 @@ public class Comment extends Common {
     @JoinColumn(name = "userSeq")
     private User user;
 
-    @JsonIgnore
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "webtoonSeq")
     private Webtoon webtoon;
@@ -66,5 +67,17 @@ public class Comment extends Common {
         if(user.checkNotLogin()) {
             throw new UsernameNotFoundException("유저만 댓글을 입력할 수 있습니다.");
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Comment{" +
+                "commentSeq=" + commentSeq +
+                ", description='" + description + '\'' +
+                ", likeCount=" + likeCount +
+                ", notLikeCount=" + notLikeCount +
+                ", deleteYn='" + deleteYn + '\'' +
+                ", user=" + user +
+                '}';
     }
 }
