@@ -4,14 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.springframework.beans.factory.annotation.Value;
 import project.toy.webtoon_copy.util.CheckUtils;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class KakaoPayDto {
+public class KakaoPayRequestDto {
 
     private Long cookieSeq;
     private String cid;
@@ -25,11 +24,7 @@ public class KakaoPayDto {
     private String cancelUrl;
     private String failUrl;
 
-    public void valueSetUp(String cid, String approvalUrl, String cancelUrl, String failUrl) {
-        this.cid = cid;
-        this.approvalUrl = approvalUrl;
-        this.cancelUrl = cancelUrl;
-        this. failUrl = failUrl;
+    public void init() {
         if(CheckUtils.isEmpty(partnerOrderId)) partnerOrderId = "1001";
         if(CheckUtils.isEmpty(partnerUserId)) partnerUserId = "gorany";
         if(CheckUtils.isEmpty(itemName)) itemName = "쿠키";

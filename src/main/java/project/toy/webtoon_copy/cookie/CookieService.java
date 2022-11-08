@@ -1,16 +1,13 @@
 package project.toy.webtoon_copy.cookie;
 
-import project.toy.webtoon_copy.kakaopay.KakaoPayDto;
+import project.toy.webtoon_copy.kakaopay.KakaoPayRequestDto;
 import project.toy.webtoon_copy.user.User;
-import project.toy.webtoon_copy.user.UserRequestDto;
-
-import java.util.Map;
 
 public interface CookieService {
 
     CookieResponseDto createCookie(User user);
 
-    String paymentToCookie(KakaoPayDto kakaoPayDto);
+    String paymentToCookie(KakaoPayRequestDto kakaoPayRequestDto);
 
     void kakaoPaySuccess(String pg_token);
 

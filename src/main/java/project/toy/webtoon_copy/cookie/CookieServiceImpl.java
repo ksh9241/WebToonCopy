@@ -7,12 +7,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.toy.webtoon_copy.cookiehst.*;
 import project.toy.webtoon_copy.kakaopay.KakaoPay;
-import project.toy.webtoon_copy.kakaopay.KakaoPayDto;
+import project.toy.webtoon_copy.kakaopay.KakaoPayRequestDto;
+import project.toy.webtoon_copy.kakaopay.KakaoPayResponseDto;
 import project.toy.webtoon_copy.user.User;
 import project.toy.webtoon_copy.user.UserRepository;
-import project.toy.webtoon_copy.util.CheckUtils;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -46,8 +45,8 @@ public class CookieServiceImpl implements CookieService{
     }
 
     @Override
-    public String paymentToCookie(KakaoPayDto kakaoPayDto) {
-        return kakaoPay.kakaoPayReady(kakaoPayDto);
+    public String paymentToCookie(KakaoPayRequestDto kakaoPayRequestDto) {
+        return kakaoPay.kakaoPayReady(kakaoPayRequestDto);
     }
 
     @Override
@@ -55,18 +54,17 @@ public class CookieServiceImpl implements CookieService{
      * @Description 카카오 페이 결제 성공 처리 및 쿠키 개수 증가 및 결제 이력 생성
      * */
     public void kakaoPaySuccess(String pg_token) {
-        KakaoPayDto kakaoPayDto = kakaoPay.kakaoPayInfo(pg_token);
-        buyCookie(kakaoPayDto.getCookieSeq(), Integer.parseInt(kakaoPayDto.getQuantity()));
-//        cookieHstService.createCookieHst();
-//    private void createCookieHst(CookieHstRequestDto cookieHstDto) {
-//        // 결제 시 필수값 설정
-//        if (CheckUtils.isEmpty(cookieHstDto.getPaymentSttusCd())) {
-//            cookieHstDto = findCookieInCookieDto(cookieHstDto, kakaoPayDto.getCookieSeq());
-//            cookieHstDto.setPaymentSttusCd(PaymentCode.A);
-//            cookieHstDto.setAmount(kakaoPayApprovalVo.getAmount().getTotal());
-//            cookieHstDto.setQuantity(kakaoPayApprovalVo.getQuantity());
-//            cookieHstDto.setTid(kakaoPayVo.getTid());
-//            cookieHstDto.setCid(kakaoPayApprovalVo.getCid());
+        KakaoPayResponseDto kakaoPayResponseDto = kakaoPay.kakaoPayInfo(pg_token);
+        Long cookieSeq = kakaoPayResponseDto.getCookieSeq();
+        int quantity = kakaoPayResponseDto.getQuantity();
+        int amount = kakaoPayResponseDto.getAmount().getTotal();
+        String cid = kakaoPayResponseDto.getCid();
+        String tid = kakaoPayResponseDto.getTid();
+
+        // 구매한 쿠키 업데이트
+        buyCookie(cookieSeq, quantity);
+        // 결제 쿠키 이력 생성
+        cookieHstService.createCookieHst(cookieSeq, quantity, amount, tid, cid);
 //        } else {
 //            cookieHstDto.setCookieHstSeq(null);
 //            cookieHstDto.setCreateDt(LocalDateTime.now());

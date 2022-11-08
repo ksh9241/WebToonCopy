@@ -5,8 +5,7 @@ import java.util.List;
 public interface CookieHstService {
     List<CookieHstResponseDto> findAllbyCookieSeq(Long cookieSeq);
 
-    CookieHstResponseDto createCookieHst(CookieHst cookieHst);
-
     CookieHst cancelCookieHst(Long cookieHstSeq);
 
+    CookieHstResponseDto createCookieHst(Long cookieSeq, int quantity, int amount, String tid, String cid);
 }

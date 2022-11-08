@@ -4,6 +4,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import project.toy.webtoon_copy.cookie.Cookie;
+import project.toy.webtoon_copy.cookie.CookieRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -14,6 +16,9 @@ import java.util.stream.Collectors;
 public class CookieHstServiceImpl implements CookieHstService{
     @Autowired
     CookieHstRepository cookieHstRepository;
+
+    @Autowired
+    CookieRepository cookieRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -26,13 +31,27 @@ public class CookieHstServiceImpl implements CookieHstService{
         return cookieHst.stream().map(entity -> entity.toDto()).collect(Collectors.toList());
     }
 
-    @Override
     /**
      * @Description 쿠키 이력 생성
      * */
-    public CookieHstResponseDto createCookieHst(CookieHst cookieHst) {
+    @Override
+    public CookieHstResponseDto createCookieHst(Long cookieSeq, int quantity, int amount, String tid, String cid) {
+        CookieHst cookieHst = initCookieHst(cookieSeq, quantity, amount, tid, cid);
         cookieHstRepository.save(cookieHst);
         return cookieHst.toDto();
+    }
+
+    private CookieHst initCookieHst (Long cookieSeq, int quantity, int amount, String tid, String cid) {
+        Cookie cookie = cookieRepository.findByCookieSeq(cookieSeq);
+        CookieHst cookieHst = new CookieHst();
+        cookieHst.setCookie(cookie);
+        cookieHst.setPaymentStatusCd(PaymentCode.PAYMENT);
+        cookieHst.setAmount(amount);
+        cookieHst.setQuantity(quantity);
+        cookieHst.setTid(tid);
+        cookieHst.setCid(cid);
+
+        return cookieHst;
     }
 
     @Override

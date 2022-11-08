@@ -3,12 +3,10 @@ package project.toy.webtoon_copy.cookie;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import project.toy.webtoon_copy.kakaopay.KakaoPayDto;
+import project.toy.webtoon_copy.kakaopay.KakaoPayRequestDto;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/cookie")
@@ -18,14 +16,14 @@ public class CookieController {
     CookieService cookieService;
 
     @PostMapping("/payment")
-    public void paymentToCookie(KakaoPayDto kakaoPayDto, HttpServletResponse response) throws IOException {
-        String url = cookieService.paymentToCookie(kakaoPayDto);
+    public void paymentToCookie(KakaoPayRequestDto kakaoPayRequestDto, HttpServletResponse response) throws IOException {
+        String url = cookieService.paymentToCookie(kakaoPayRequestDto);
         System.out.println("url == "+url);
         response.sendRedirect(url);
     }
 
     @GetMapping("/kakaopay-success") // RestFul URL 규칙
-    public String kakaoPaySuccess(@RequestParam("pg_token") String pg_token, Model model) {
+    public String kakaoPaySuccess(@RequestParam("pg_token") String pg_token) {
         cookieService.kakaoPaySuccess(pg_token);
         return "성공적으로 결제가 완료되었습니다.";
     }

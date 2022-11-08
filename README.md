@@ -92,7 +92,7 @@ kakaoPay Object
   // 싱글톤이라 이전 결과에 대한 데이터가 남아있어서 문제됨. (전역변수 x)
     private KakaoPayVo kakaoPayVo;
     private KakaoPayApprovalVo kakaoPayApprovalVo;
-    private KakaoPayDto kakaoPayDto;
+    private KakaoPayDto kakaoPayRequestDto;
 
 // 이 부분 cookieHst 처리 후 호출해서 카카오 페이 결제 취소만 하면 되는데 역할에 대한 침범이니까 이 부분 교체
 public String kakaoPayCancel(CookieHstDto cookieHstDto) { // Cid, Tid, Amount
