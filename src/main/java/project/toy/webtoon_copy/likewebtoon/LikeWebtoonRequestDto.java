@@ -8,10 +8,10 @@ import project.toy.webtoon_copy.webtoon.Webtoon;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class LikeWebtoonDto {
+public class LikeWebtoonRequestDto {
 
     Long likeWebtoonSeq;
-    Webtoon webtoon;    // 이거 연관관계가 1 : 1인데 생각좀 해보자.
+    Webtoon webtoon;
     Long userSeq;
     String likeYn;
     String notiYn;

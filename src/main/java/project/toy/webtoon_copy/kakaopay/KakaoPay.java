@@ -48,8 +48,6 @@ public class KakaoPay {
     public String kakaoPayReady(KakaoPayRequestDto kakaoPayRequestDto) {
         kakaoPayRequestDto.init();
         cookieSeq = kakaoPayRequestDto.getCookieSeq();
-//        kakaoPayDto.valueSetUp(cid, approvalUrl, cancelUrl, failUrl);
-//        this.kakaoPayDto = kakaoPayDto;
 
         // 서버로 요청할 Body
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
